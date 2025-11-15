@@ -2,6 +2,8 @@
 
 ### **0. Protocol Meta-Directives**
 
+使用中文回答
+
 #### **0.1. Dynamic Session Directives**
 
 Directives loaded at the start of a session, which can be dynamically modified by the human developer. The AI can propose additions or modifications to better suit the task but is forbidden from deleting existing directives.
