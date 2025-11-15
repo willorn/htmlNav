@@ -668,6 +668,8 @@
   // ===================================================================================
   const RECENT_LINKS_KEY = 'navhub_recent_links';
   const MAX_RECENT_LINKS = 5;
+  const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast?latitude=22.55&longitude=114.05&current_weather=true&timezone=Asia%2FShanghai';
+  const WEATHER_FETCH_TIMEOUT = 5000;
 
   const navigationData = [
     {
@@ -816,6 +818,7 @@
       navigationData.map(category => [category.title, true])
     );
     let recentLinks = loadRecentLinks();
+    let weatherTipRequested = false;
 
     updateDomainSummary(stats);
     renderHero(stats);
@@ -989,7 +992,12 @@
         heroGreeting.textContent = getGreeting();
       }
       if (heroTip) {
-        heroTip.textContent = getWorkTip(currentStats);
+        const fallbackTip = getWorkTip(currentStats);
+        heroTip.textContent = fallbackTip;
+        if (!weatherTipRequested) {
+          weatherTipRequested = true;
+          refreshWeatherTip();
+        }
       }
       if (hotTagsContainer) {
         const entries = Array.from(currentStats.tagCounts.entries()).sort((a, b) => b[1] - a[1]);
@@ -1006,6 +1014,15 @@
       if (heroPanel) {
         heroPanel.setAttribute('aria-live', 'polite');
       }
+    }
+
+    function refreshWeatherTip() {
+      fetchShenzhenWeather().then(weather => {
+        const formatted = formatWeatherTip(weather);
+        if (formatted && heroTip) {
+          heroTip.textContent = formatted;
+        }
+      });
     }
 
     function renderMiniTip(currentStats) {
@@ -1189,6 +1206,104 @@
       }
       return '若需要补充说明，可在链接对象中添加 description 字段让团队更快理解。';
     }
+
+    function fetchShenzhenWeather() {
+      if (typeof fetch !== 'function') {
+        return Promise.resolve(null);
+      }
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const timeoutId = setTimeout(() => {
+        if (controller) {
+          controller.abort();
+        }
+      }, WEATHER_FETCH_TIMEOUT);
+
+      return fetch(WEATHER_API_URL, {
+        signal: controller ? controller.signal : undefined,
+        cache: 'no-store'
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`接口响应异常：${response.status}`);
+          }
+          return response.json();
+        })
+        .then(payload => {
+          return payload && payload.current_weather ? payload.current_weather : null;
+        })
+        .catch(error => {
+          console.warn('天气接口调用失败', error);
+          return null;
+        })
+        .finally(() => {
+          clearTimeout(timeoutId);
+        });
+    }
+
+    function describeWeatherCode(code) {
+      const value = Number(code);
+      if (Number.isNaN(value)) {
+        return '多云';
+      }
+      if (value === 0) {
+        return '晴朗';
+      }
+      if ([1, 2, 3].includes(value)) {
+        return '多云';
+      }
+      if ([45, 48].includes(value)) {
+        return '有雾';
+      }
+      if ([51, 53, 55, 56, 57].includes(value)) {
+        return '细雨';
+      }
+      if ([61, 63, 65, 66, 67].includes(value)) {
+        return '小到中雨';
+      }
+      if ([71, 73, 75, 77, 85, 86].includes(value)) {
+        return '降雪';
+      }
+      if ([80, 81, 82].includes(value)) {
+        return '阵雨';
+      }
+      if ([95, 96, 99].includes(value)) {
+        return '雷暴';
+      }
+      return '多云';
+    }
+
+    function formatWeatherTip(weather) {
+      if (
+        !weather ||
+        typeof weather.temperature !== 'number' ||
+        Number.isNaN(weather.temperature)
+      ) {
+        return '';
+      }
+      const parts = [
+        `深圳当前${describeWeatherCode(weather.weathercode)}`,
+        `气温 ${Math.round(weather.temperature)}°C`
+      ];
+      if (typeof weather.windspeed === 'number' && !Number.isNaN(weather.windspeed)) {
+        parts.push(`风速 ${Math.round(weather.windspeed)} km/h`);
+      }
+      return `${parts.join('，')}，合理安排通勤与现场支持。`;
+    }
+
+    function runWeatherFormatterSelfCheck() {
+      const probe = { temperature: 27.4, windspeed: 6.2, weathercode: 80 };
+      const formatted = formatWeatherTip(probe);
+      console.assert(
+        typeof formatted === 'string' &&
+          formatted.includes('深圳当前') &&
+          formatted.includes('气温') &&
+          formatted.includes('风速'),
+        '天气提示格式化逻辑异常',
+        formatted
+      );
+    }
+
+    runWeatherFormatterSelfCheck();
 
     function formatTimestamp(timestamp) {
       if (!timestamp) {
