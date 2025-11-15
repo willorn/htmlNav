@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <title>All in One - Navigation</title>
   <style>
     :root {
@@ -32,7 +31,7 @@
       min-height: 100vh;
       padding: 2rem;
       background-image: radial-gradient(circle at 1% 1%, rgba(40, 90, 255, 0.15), transparent 30%),
-        radial-gradient(circle at 99% 99%, rgba(255, 40, 90, 0.15), transparent 40%);
+      radial-gradient(circle at 99% 99%, rgba(255, 40, 90, 0.15), transparent 40%);
     }
 
     .container {
@@ -62,100 +61,6 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: 1.5rem;
-    }
-
-    .control-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .status-banner {
-      min-height: 1.5rem;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      transition: opacity 0.3s ease;
-      opacity: 0;
-    }
-
-    .status-banner.visible {
-      opacity: 1;
-    }
-
-    .status-banner[data-state="success"] {
-      color: #34c759;
-    }
-
-    .status-banner[data-state="error"] {
-      color: #ff453a;
-    }
-
-    .status-banner[data-state="info"] {
-      color: var(--text-secondary);
-    }
-
-    .btn {
-      border: none;
-      border-radius: 10px;
-      padding: 0.65rem 1.5rem;
-      font-size: 0.95rem;
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
-      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .btn.primary {
-      background: var(--accent-color);
-      color: #fff;
-      box-shadow: 0 10px 20px rgba(0, 122, 255, 0.35);
-    }
-
-    .btn.ghost {
-      background: transparent;
-      border: 1px solid var(--card-border);
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    .btn:focus-visible {
-      outline: 2px solid rgba(0, 122, 255, 0.6);
-      outline-offset: 3px;
-    }
-
-    .empty-state {
-      width: 100%;
-      padding: 2rem;
-      text-align: center;
-      border: 1px dashed var(--card-border);
-      border-radius: 16px;
-      color: var(--text-secondary);
-    }
-
-    .link-placeholder {
-      padding: 1rem 1.25rem;
-      border-radius: 12px;
-      border: 1px dashed var(--card-border);
-      color: var(--text-secondary);
-      text-align: center;
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .hidden {
-      display: none !important;
     }
 
     .category {
@@ -321,353 +226,183 @@
       .categories {
         grid-template-columns: 1fr;
       }
-
-      .control-bar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .editor-actions {
-        flex-direction: column;
-        width: 100%;
-      }
-
-      .editor-actions .btn {
-        width: 100%;
-      }
     }
   </style>
 </head>
 
-  <body>
-    <div class="container">
-      <header>
-        <h1>All in One</h1>
-      </header>
+<body>
+<div class="container">
+  <header>
+    <h1>All in One</h1>
+  </header>
 
-      <div class="control-bar">
-        <p class="subtitle">当前页面读取 <code>data/navigation-data.json</code>，可直接静态托管，也支持手动加载文件。</p>
-      </div>
+  <div class="categories"></div>
+</div>
 
-      <div class="status-banner" id="statusBanner" aria-live="polite"></div>
+<script>
+  // ===================================================================================
+  // ===== 未来你只需要维护下面的 navigationData 列表即可 =====
+  // ===================================================================================
+  const navigationData = [
+    {
+      title: "项目管理",
+      links: [
+        {
+          title: "NCIS 禅道任务总览",
+          url: "http://pm.saiit.com.cn/my/",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
+        },
+        {
+          title: "需求规格 2.0",
+          url: "https://fyvnc1t6bo.feishu.cn/wiki/JWOGw4HU5iiqQJktPcbceGOzndg?fromScene=spaceOverview",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
+        },
+        {
+          title: "NCIS 原型",
+          url: "https://modao.cc/proto/FIFBDXrsv9h48aYqq8cpA/sharing?view_mode=device&screen=rbpUn2ZfEb5wxQ4Eo&canvasId=rcUjMnlRUn34N1M9YK5pEU",
+          description: "NCIS 系统产品原型",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`
+        },
+        {
+          title: "NCIS 数模",
+          url: "https://www.pdmaas.cn/design?projectId=1951183560404127746",
+          description: "数据库设计文档",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`
+        },
+        {
+          title: "重要数据脚本同步到UAT",
+          url: "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=VByGeN",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
+        },
+      ]
+    },
 
-      <div class="categories" aria-live="polite"></div>
-    </div>
+    {
+      title: "开发",
+      links: [
+        {
+          title: "NCIS 开发环境",
+          url: "https://ncis-dev.szgas.com.cn/system/user",
+          description: "NCIS 开发环境在线",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
+        },
+        {
+          title: "NCIS 数据库脚本",
+          url: "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=VByGeN",
+          description: "NCIS 数据库脚本",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`
+        },
+        {
+          title: "NCIS 后端开发规范",
+          url: "https://fyvnc1t6bo.feishu.cn/wiki/JwcDwpXwsi03PbkWkFqcby7LnJe",
+          description: "后端开发规范",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
+        },
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const categoriesContainer = document.querySelector('.categories');
-      const statusBanner = document.getElementById('statusBanner');
-      const subtitle = document.querySelector('.subtitle');
-      const offlineLoader = document.getElementById('offlineLoader');
-      const offlineLoaderMessage = document.getElementById('offlineLoaderMessage');
-      const selectOfflineFileButton = document.getElementById('selectOfflineFile');
-      const loadOfflineCacheButton = document.getElementById('loadOfflineCache');
-      const offlineFileInput = document.getElementById('offlineFileInput');
-      const OFFLINE_CACHE_KEY = 'offlineNavigationCache';
-      const defaultIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>`;
-      let navigationData = [];
-      let statusTimer;
 
-      if (!categoriesContainer) {
-        return;
-      }
 
-      const escapeHtml = (value = '') =>
-        String(value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
+      ]
+    },
+    {
+      title: "Environment",
+      links: [
 
-      const sanitizeSvg = (svg = '') => {
-        if (!svg || typeof svg !== 'string') return '';
-        return svg
-          .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
-          .replace(/javascript:/gi, '')
-          .replace(/data:text\/html/gi, '')
-          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-      };
+        {
+          title: "Jenkins Build Env",
+          url: "http://10.9.31.83:9001/job/sz-newcis-dev/",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
+        },
+        {
+          title: "Nacos",
+          url: "http://10.9.18.74:20009/nacos/#/configurationManagement?dataId=&group=&appName=&namespace=ncis_dev&pageSize=&pageNo=&namespaceShowName=ncis_dev",
+          description: "NCIS Nacos在线",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
+        },
+        {
+          title: "崖山数据库 — Cloud版",
+          url: "http://10.0.17.94:9328/",
+          description: "YaShan云数据库环境, 线上燕山云数据库",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`
+        },
+        {
+          title: "NCIS 权限设计",
+          url: "https://fyvnc1t6bo.feishu.cn/docx/CQXzdKaHRoP030xxRY0cS1ERnac",
+          description: "Newcis 权限和登录设计文档",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`
+        },
 
-      const isValidUrl = (string) => {
-        try {
-          const url = new URL(string);
-          return ['http:', 'https:', 'ftp:', 'ftps:'].includes(url.protocol);
-        } catch (_) {
-          return false;
+        {
+          title: "NCIS 飞书项目总览",
+          url: "https://fyvnc1t6bo.feishu.cn/drive/folder/Pn06fVKxslHtHBdL4vgcdMsEnuk",
+          description: "NCIS 飞书项目总览",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
+        },
+
+        {
+          title: "CCB测试环境",
+          url: "https://demo.tzuat.szgas.com/",
+          description: "建行系统测试环境, 旧系统测试环境",
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>`
         }
-      };
+      ]
+    }
+  ];
 
-      const normalizeUrl = (value = '') => {
-        const trimmed = value.trim();
-        if (!trimmed) {
-          return '';
-        }
-        if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(trimmed)) {
-          return isValidUrl(trimmed) ? trimmed : '';
-        }
-        const withProtocol = `https://${trimmed}`;
-        return isValidUrl(withProtocol) ? withProtocol : '';
-      };
+  // ===================================================================================
+  // ===== 下面的代码是用来渲染页面的，一般不需要修改 =====
+  // ===================================================================================
+  document.addEventListener('DOMContentLoaded', function () {
+    const categoriesContainer = document.querySelector('.categories');
 
-      function setStatus(message = '', type = 'info', autoHide = true) {
-        if (!statusBanner) {
-          return;
-        }
-        clearTimeout(statusTimer);
-        if (!message) {
-          statusBanner.classList.remove('visible');
-          statusBanner.textContent = '';
-          return;
-        }
+    // Function to render all categories and links
+    function renderContent() {
+      // Clear existing content
+      categoriesContainer.innerHTML = '';
 
-        statusBanner.dataset.state = type;
-        statusBanner.textContent = message;
-        statusBanner.classList.add('visible');
+      let allCategoriesHTML = '';
+      navigationData.forEach(category => {
+        let allLinksHTML = '';
+        category.links.forEach(link => {
+          allLinksHTML += `
+                            <div class="link-item" data-url="${link.url}" data-description="${link.description}">
+                                <div class="link-icon">${link.icon}</div>
+                                <div class="link-content">
+                                    <div class="link-title">${link.title}</div>
+                                    <div class="link-url">${link.url}</div>
+                                    <div class="tooltip">${link.description}</div>
+                                </div>
+                            </div>
+                        `;
+        });
 
-        if (autoHide) {
-          statusTimer = setTimeout(() => {
-            statusBanner.classList.remove('visible');
-            statusBanner.textContent = '';
-          }, 4000);
-        }
-      }
+        allCategoriesHTML += `
+                        <div class="category">
+                            <div class="category-header"><h2 class="category-title">${category.title}</h2></div>
+                            <div class="links">
+                                ${allLinksHTML}
+                            </div>
+                        </div>
+                    `;
+      });
+      categoriesContainer.innerHTML = allCategoriesHTML;
+    }
 
-      const isValidNavigationPayload = (payload) => Array.isArray(payload);
+    // Initial render of the content
+    renderContent();
 
-      function getOfflineCache() {
-        try {
-          const raw = localStorage.getItem(OFFLINE_CACHE_KEY);
-          if (!raw) {
-            return null;
-          }
-          const parsed = JSON.parse(raw);
-          if (!isValidNavigationPayload(parsed?.payload)) {
-            return null;
-          }
-          return parsed;
-        } catch (error) {
-          console.warn('读取离线缓存失败:', error);
-          return null;
-        }
-      }
-
-      function saveOfflineCache(payload) {
-        try {
-          const snapshot = { payload, updatedAt: Date.now() };
-          localStorage.setItem(OFFLINE_CACHE_KEY, JSON.stringify(snapshot));
-        } catch (error) {
-          console.warn('写入离线缓存失败:', error);
-        }
-      }
-
-      function updateOfflineCacheButton() {
-        if (!loadOfflineCacheButton) {
-          return;
-        }
-        const cached = getOfflineCache();
-        if (cached) {
-          loadOfflineCacheButton.classList.remove('hidden');
-          const time = cached.updatedAt ? new Date(cached.updatedAt).toLocaleString() : '';
-          loadOfflineCacheButton.textContent = time ? `使用上次数据（${time}）` : '使用上次加载的数据';
-        } else {
-          loadOfflineCacheButton.classList.add('hidden');
-        }
-      }
-
-      function showOfflineLoader(message = '') {
-        if (!offlineLoader) {
-          return;
-        }
-        offlineLoader.classList.remove('hidden');
-        if (offlineLoaderMessage) {
-          offlineLoaderMessage.textContent =
-            message || 'file:// 模式下请手动选择本地的 data/navigation-data.json 文件。';
-        }
-        updateOfflineCacheButton();
-      }
-
-      function hideOfflineLoader() {
-        if (!offlineLoader) {
-          return;
-        }
-        offlineLoader.classList.add('hidden');
-      }
-
-      function applyOfflineData(payload, sourceLabel = '已加载本地数据') {
-        if (!isValidNavigationPayload(payload)) {
-          setStatus('导航数据格式必须是数组', 'error', false);
-          return;
-        }
-        navigationData = payload;
-        renderContent();
-        setStatus(sourceLabel, 'success');
-        if (subtitle) {
-          subtitle.textContent = '离线模式 - 手动加载';
-        }
-      }
-
-      async function handleOfflineFile(file) {
-        if (!file) {
-          return;
-        }
-        setStatus('正在读取本地 JSON 文件...', 'info', false);
-        try {
-          const text = await file.text();
-          const parsed = JSON.parse(text);
-          if (!isValidNavigationPayload(parsed)) {
-            throw new Error('JSON 顶层必须是数组');
-          }
-          applyOfflineData(parsed, `已加载 ${file.name}`);
-          saveOfflineCache(parsed);
-        } catch (error) {
-          console.error('读取本地文件失败:', error);
-          setStatus(`读取失败：${error.message}`, 'error', false);
-        }
-      }
-
-      function loadOfflineCacheData() {
-        const cached = getOfflineCache();
-        if (!cached) {
-          setStatus('没有可用的离线缓存，请先选择 JSON 文件', 'error', false);
-          return;
-        }
-        applyOfflineData(cached.payload, '已加载缓存数据');
-      }
-
-      function createLinkMarkup(link = {}) {
-        const title = escapeHtml(link?.title || '未命名链接');
-        const rawUrl = typeof link?.url === 'string' ? link.url.trim() : '';
-        const urlAttr = escapeHtml(rawUrl);
-        const urlLabel = rawUrl ? escapeHtml(rawUrl) : '未配置链接';
-        const description = link?.description ? escapeHtml(link.description) : '';
-        const tooltip = description ? `<div class="tooltip">${description}</div>` : '';
-        const icon = sanitizeSvg(link?.icon) || defaultIcon;
-
-        return `
-          <div class="link-item" data-url="${urlAttr}">
-            <div class="link-icon">${icon}</div>
-            <div class="link-content">
-              <div class="link-title">${title}</div>
-              <div class="link-url">${urlLabel}</div>
-              ${tooltip}
-            </div>
-          </div>
-        `;
-      }
-
-      function renderContent() {
-        if (!Array.isArray(navigationData) || navigationData.length === 0) {
-          categoriesContainer.innerHTML = '<div class="empty-state">暂无导航数据。</div>';
-          return;
-        }
-
-        const html = navigationData
-          .map((category = {}) => {
-            const title = escapeHtml(category?.title || '未命名分类');
-            const links =
-              Array.isArray(category?.links) && category.links.length
-                ? category.links.map(createLinkMarkup).join('')
-                : '<div class="link-placeholder">该分组暂无链接</div>';
-
-            return `
-              <div class="category">
-                <div class="category-header"><h2 class="category-title">${title}</h2></div>
-                <div class="links">
-                  ${links}
-                </div>
-              </div>
-            `;
-          })
-          .join('');
-
-        categoriesContainer.innerHTML = html;
-      }
-
-      async function fetchNavigationData() {
-        const loadingMsg = '正在加载导航数据...';
-        categoriesContainer.innerHTML = `<div class="empty-state">${loadingMsg}</div>`;
-        setStatus(loadingMsg, 'info');
-
-        const isHttpProtocol = window.location.protocol.startsWith('http');
-        const currentDir = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-        const jsonPath = currentDir + 'data/navigation-data.json';
-
-        if (!isHttpProtocol) {
-          showOfflineLoader('file:// 模式无法自动读取 JSON，请手动选择本地文件。');
-          setStatus('等待手动加载...', 'info');
-          if (subtitle) {
-            subtitle.textContent = '离线模式 - 手动加载';
-          }
-          return;
-        }
-
-        try {
-          const response = await fetch(jsonPath);
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-          navigationData = await response.json();
-          renderContent();
-          saveOfflineCache(navigationData);
-          setStatus('导航数据加载完成。', 'success');
-          if (subtitle) {
-            subtitle.textContent = '在线模式 - 自动加载';
-          }
-          hideOfflineLoader();
-        } catch (error) {
-          console.error('加载导航数据失败:', error);
-          const message = '无法加载 navigation-data.json，请手动选择文件。';
-          categoriesContainer.innerHTML = `<div class="empty-state">${message}</div>`;
-          setStatus(message, 'error', false);
-          if (subtitle) {
-            subtitle.textContent = '数据加载失败';
-          }
-          showOfflineLoader(message);
-        }
-      }
-
-      categoriesContainer.addEventListener('click', event => {
-        const linkItem = event.target.closest('.link-item');
-        if (!linkItem) {
-          return;
-        }
-        const rawUrl = linkItem.dataset.url || '';
-        const url = normalizeUrl(rawUrl);
-
+    // Use event delegation for link clicks (this works for dynamically added content)
+    categoriesContainer.addEventListener('click', function (e) {
+      const linkItem = e.target.closest('.link-item');
+      if (linkItem) {
+        const url = linkItem.getAttribute('data-url');
         if (url) {
           window.open(url, '_blank');
         }
-      });
-
-      if (selectOfflineFileButton && offlineFileInput) {
-        selectOfflineFileButton.addEventListener('click', () => {
-          offlineFileInput.value = '';
-          offlineFileInput.click();
-        });
       }
-
-      if (offlineFileInput) {
-        offlineFileInput.addEventListener('change', (event) => {
-          const file = event.target.files?.[0];
-          if (file) {
-            handleOfflineFile(file);
-          }
-          event.target.value = '';
-        });
-      }
-
-      if (loadOfflineCacheButton) {
-        loadOfflineCacheButton.addEventListener('click', () => {
-          loadOfflineCacheData();
-        });
-      }
-
-      fetchNavigationData();
     });
-  </script>
 
+  });
+</script>
 </body>
 
 </html>
