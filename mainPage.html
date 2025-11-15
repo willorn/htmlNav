@@ -63,6 +63,139 @@
       gap: 1.5rem;
     }
 
+    .control-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .status-banner {
+      min-height: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .status-banner.visible {
+      opacity: 1;
+    }
+
+    .status-banner[data-state="success"] {
+      color: #34c759;
+    }
+
+    .status-banner[data-state="error"] {
+      color: #ff453a;
+    }
+
+    .status-banner[data-state="info"] {
+      color: var(--text-secondary);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 0.65rem 1.5rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn.primary {
+      background: var(--accent-color);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(0, 122, 255, 0.35);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      border: 1px solid var(--card-border);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .btn:focus-visible,
+    .editor-panel textarea:focus-visible {
+      outline: 2px solid rgba(0, 122, 255, 0.6);
+      outline-offset: 3px;
+    }
+
+    .editor-panel {
+      background: rgba(18, 18, 20, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(20px);
+    }
+
+    .editor-panel textarea {
+      width: 100%;
+      min-height: 260px;
+      background: rgba(10, 10, 12, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1rem;
+      resize: vertical;
+      color: var(--text-primary);
+      font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .editor-actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .editor-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state {
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+      border: 1px dashed var(--card-border);
+      border-radius: 16px;
+      color: var(--text-secondary);
+    }
+
+    .link-placeholder {
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      border: 1px dashed var(--card-border);
+      color: var(--text-secondary);
+      text-align: center;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
     .category {
       background: var(--card-color);
       border-radius: 18px;
@@ -226,181 +359,484 @@
       .categories {
         grid-template-columns: 1fr;
       }
+
+      .control-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .editor-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .editor-actions .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
 
-<body>
-  <div class="container">
-    <header>
-      <h1>All in One</h1>
-    </header>
+  <body>
+    <div class="container">
+      <header>
+        <h1>All in One</h1>
+      </header>
 
-    <div class="categories"></div>
-  </div>
+      <div class="control-bar">
+        <p class="subtitle">当前页面由本地 JSON 数据驱动，可在后台直接维护。</p>
+        <button type="button" class="btn primary" id="toggleEditor">打开编辑器</button>
+      </div>
+
+      <div class="status-banner" id="statusBanner" aria-live="polite"></div>
+
+      <section class="editor-panel hidden" id="editorPanel" aria-hidden="true">
+        <div class="editor-heading">
+          <h2 class="category-title">导航 JSON 编辑器</h2>
+          <p class="editor-description">编辑下方 JSON 后点击保存，内容会实时写入服务器本地的 <code>data/navigation-data.json</code> 文件。</p>
+        </div>
+        <textarea id="navigationEditor" spellcheck="false" aria-label="导航 JSON 数据"></textarea>
+        <div class="editor-actions">
+          <button type="button" class="btn primary" id="saveNavigation">保存</button>
+          <button type="button" class="btn ghost" id="cancelEdit">取消</button>
+        </div>
+      </section>
+
+      <div class="categories" aria-live="polite"></div>
+    </div>
 
   <script>
-    // ===================================================================================
-    // ===== 未来你只需要维护下面的 navigationData 列表即可 =====
-    // ===================================================================================
-    const navigationData = [
+    // 默认导航数据（用于静态模式回退）
+    const DEFAULT_NAVIGATION_DATA = [
       {
-        title: "项目管理",
-        links: [
+        "title": "项目管理",
+        "links": [
           {
-            title: "NCIS 禅道任务总览",
-            url: "http://pm.saiit.com.cn/my/",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
+            "title": "NCIS 禅道任务总览",
+            "url": "http://pm.saiit.com.cn/my/",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"></line><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"></line><polyline points=\"10 9 9 9 8 9\"></polyline></svg>"
           },
           {
-            title: "需求规格 2.0",
-            url: "https://fyvnc1t6bo.feishu.cn/wiki/JWOGw4HU5iiqQJktPcbceGOzndg?fromScene=spaceOverview",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
+            "title": "需求规格 2.0",
+            "url": "https://fyvnc1t6bo.feishu.cn/wiki/JWOGw4HU5iiqQJktPcbceGOzndg?fromScene=spaceOverview",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"></path><circle cx=\"12\" cy=\"7\" r=\"4\"></circle></svg>"
           },
           {
-            title: "NCIS 原型",
-            url: "https://modao.cc/proto/FIFBDXrsv9h48aYqq8cpA/sharing?view_mode=device&screen=rbpUn2ZfEb5wxQ4Eo&canvasId=rcUjMnlRUn34N1M9YK5pEU",
-            description: "NCIS 系统产品原型",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`
+            "title": "NCIS 原型",
+            "url": "https://modao.cc/proto/FIFBDXrsv9h48aYqq8cpA/sharing?view_mode=device&screen=rbpUn2ZfEb5wxQ4Eo&canvasId=rcUjMnlRUn34N1M9YK5pEU",
+            "description": "NCIS 系统产品原型",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\" ry=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12.01\" y2=\"18\"></line></svg>"
           },
           {
-            title: "NCIS 数模",
-            url: "https://www.pdmaas.cn/design?projectId=1951183560404127746",
-            description: "数据库设计文档",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`
-          },
-          {   
-            title: "重要数据脚本同步到UAT",
-            url: "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=VByGeN",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
-          },
-        ]
-      },
-
-      {
-        title: "开发",
-        links: [
-          {
-            title: "NCIS 开发环境",
-            url: "https://ncis-dev.szgas.com.cn/system/user",
-            description: "NCIS 开发环境在线",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
-           },
-          {
-            title: "NCIS 数据库脚本",
-            url: "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=VByGeN",
-            description: "NCIS 数据库脚本",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`
+            "title": "NCIS 数模",
+            "url": "https://www.pdmaas.cn/design?projectId=1951183560404127746",
+            "description": "数据库设计文档",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"></path></svg>"
           },
           {
-            title: "NCIS 后端开发规范",
-            url: "https://fyvnc1t6bo.feishu.cn/wiki/JwcDwpXwsi03PbkWkFqcby7LnJe",
-            description: "后端开发规范",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
-          },
-           
-          
-
+            "title": "重要数据脚本同步到UAT",
+            "url": "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=VByGeN",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"></line><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"></line><polyline points=\"10 9 9 9 8 9\"></polyline></svg>"
+          }
         ]
       },
       {
-        title: "Environment",
-        links: [
-
+        "title": "开发",
+        "links": [
           {
-            title: "Jenkins Build Env",
-            url: "http://10.9.31.83:9001/job/sz-newcis-dev/",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
-          },
-           {
-            title: "Nacos",
-            url: "http://10.9.18.74:20009/nacos/#/configurationManagement?dataId=&group=&appName=&namespace=ncis_dev&pageSize=&pageNo=&namespaceShowName=ncis_dev",
-            description: "NCIS Nacos在线",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
-           },
-          {
-            title: "崖山数据库 — Cloud版",
-            url: "http://10.0.17.94:9328/",
-            description: "YaShan云数据库环境, 线上燕山云数据库",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`
+            "title": "NCIS 开发环境",
+            "url": "https://ncis-dev.szgas.com.cn/system/user",
+            "description": "NCIS 开发环境在线",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"></line><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"></line><polyline points=\"10 9 9 9 8 9\"></polyline></svg>"
           },
           {
-            title: "NCIS 权限设计",
-            url: "https://fyvnc1t6bo.feishu.cn/docx/CQXzdKaHRoP030xxRY0cS1ERnac",
-            description: "Newcis 权限和登录设计文档",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`
+            "title": "NCIS 数据库脚本",
+            "url": "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=VByGeN",
+            "description": "NCIS 数据库脚本",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\" ry=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12.01\" y2=\"18\"></line></svg>"
           },
-          
           {
-            title: "NCIS 飞书项目总览",
-            url: "https://fyvnc1t6bo.feishu.cn/drive/folder/Pn06fVKxslHtHBdL4vgcdMsEnuk",
-            description: "NCIS 飞书项目总览",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
-           },
-         
+            "title": "NCIS 后端开发规范",
+            "url": "https://fyvnc1t6bo.feishu.cn/wiki/JwcDwpXwsi03PbkWkFqcby7LnJe",
+            "description": "后端开发规范",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"16 18 22 12 16 6\"></polyline><polyline points=\"8 6 2 12 8 18\"></polyline></svg>"
+          }
+        ]
+      },
+      {
+        "title": "Environment",
+        "links": [
           {
-            title: "CCB测试环境",
-            url: "https://demo.tzuat.szgas.com/",
-            description: "建行系统测试环境, 旧系统测试环境",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>`
-          } 
+            "title": "Jenkins Build Env",
+            "url": "http://10.9.31.83:9001/job/sz-newcis-dev/",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"></line><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"></line><polyline points=\"10 9 9 9 8 9\"></polyline></svg>"
+          },
+          {
+            "title": "Nacos",
+            "url": "http://10.9.18.74:20009/nacos/#/configurationManagement?dataId=&group=&appName=&namespace=ncis_dev&pageSize=&pageNo=&namespaceShowName=ncis_dev",
+            "description": "NCIS Nacos在线",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"></line><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"></line><polyline points=\"10 9 9 9 8 9\"></polyline></svg>"
+          },
+          {
+            "title": "崖山数据库 — Cloud版",
+            "url": "http://10.0.17.94:9328/",
+            "description": "YaShan云数据库环境, 线上燕山云数据库",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z\"></path></svg>"
+          },
+          {
+            "title": "NCIS 权限设计",
+            "url": "https://fyvnc1t6bo.feishu.cn/docx/CQXzdKaHRoP030xxRY0cS1ERnac",
+            "description": "Newcis 权限和登录设计文档",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\" ry=\"2\"></rect><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"></path></svg>"
+          },
+          {
+            "title": "NCIS 飞书项目总览",
+            "url": "https://fyvnc1t6bo.feishu.cn/drive/folder/Pn06fVKxslHtHBdL4vgcdMsEnuk",
+            "description": "NCIS 飞书项目总览",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z\"></path></svg>"
+          },
+          {
+            "title": "CCB测试环境",
+            "url": "https://demo.tzuat.szgas.com/",
+            "description": "建行系统测试环境, 旧系统测试环境",
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z\"></path></svg>"
+          }
         ]
       }
     ];
 
-    // ===================================================================================
-    // ===== 下面的代码是用来渲染页面的，一般不需要修改 =====
-    // ===================================================================================
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', () => {
       const categoriesContainer = document.querySelector('.categories');
+      const toggleEditorButton = document.getElementById('toggleEditor');
+      const editorPanel = document.getElementById('editorPanel');
+      const editorTextarea = document.getElementById('navigationEditor');
+      const saveButton = document.getElementById('saveNavigation');
+      const cancelButton = document.getElementById('cancelEdit');
+      const statusBanner = document.getElementById('statusBanner');
+      const subtitle = document.querySelector('.subtitle');
+      const defaultIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>`;
+      let navigationData = [];
+      let editorOpen = false;
+      let statusTimer;
 
-      // Function to render all categories and links
-      function renderContent() {
-        // Clear existing content
-        categoriesContainer.innerHTML = '';
-
-        let allCategoriesHTML = '';
-        navigationData.forEach(category => {
-          let allLinksHTML = '';
-          category.links.forEach(link => {
-            allLinksHTML += `
-                            <div class="link-item" data-url="${link.url}" data-description="${link.description}">
-                                <div class="link-icon">${link.icon}</div>
-                                <div class="link-content">
-                                    <div class="link-title">${link.title}</div>
-                                    <div class="link-url">${link.url}</div>
-                                    <div class="tooltip">${link.description}</div>
-                                </div>
-                            </div>
-                        `;
-          });
-
-          allCategoriesHTML += `
-                        <div class="category">
-                            <div class="category-header"><h2 class="category-title">${category.title}</h2></div>
-                            <div class="links">
-                                ${allLinksHTML}
-                            </div>
-                        </div>
-                    `;
-        });
-        categoriesContainer.innerHTML = allCategoriesHTML;
+      if (!categoriesContainer) {
+        return;
       }
 
-      // Initial render of the content
-      renderContent();
+      if (toggleEditorButton) {
+        toggleEditorButton.disabled = true;
+      }
 
-      // Use event delegation for link clicks (this works for dynamically added content)
-      categoriesContainer.addEventListener('click', function (e) {
-        const linkItem = e.target.closest('.link-item');
-        if (linkItem) {
-          const url = linkItem.getAttribute('data-url');
-          if (url) {
-            window.open(url, '_blank');
+      const escapeHtml = (value = '') =>
+        String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+
+      const sanitizeSvg = (svg = '') => {
+        if (!svg || typeof svg !== 'string') return '';
+        return svg
+          .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+          .replace(/javascript:/gi, '')
+          .replace(/data:text\/html/gi, '')
+          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+      };
+
+      const isValidUrl = (string) => {
+        try {
+          const url = new URL(string);
+          return ['http:', 'https:', 'ftp:', 'ftps:'].includes(url.protocol);
+        } catch (_) {
+          return false;
+        }
+      };
+
+      const normalizeUrl = (value = '') => {
+        const trimmed = value.trim();
+        if (!trimmed) {
+          return '';
+        }
+        // 检查是否已经有协议
+        if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(trimmed)) {
+          return isValidUrl(trimmed) ? trimmed : '';
+        }
+        // 添加https协议并验证
+        const withProtocol = `https://${trimmed}`;
+        return isValidUrl(withProtocol) ? withProtocol : '';
+      };
+
+      function setStatus(message = '', type = 'info', autoHide = true) {
+        if (!statusBanner) {
+          return;
+        }
+        clearTimeout(statusTimer);
+        if (!message) {
+          statusBanner.classList.remove('visible');
+          statusBanner.textContent = '';
+          return;
+        }
+
+        statusBanner.dataset.state = type;
+        statusBanner.textContent = message;
+        statusBanner.classList.add('visible');
+
+        if (autoHide) {
+          statusTimer = setTimeout(() => {
+            statusBanner.classList.remove('visible');
+            statusBanner.textContent = '';
+          }, 4000);
+        }
+      }
+
+      function createLinkMarkup(link = {}) {
+        const title = escapeHtml(link?.title || '未命名链接');
+        const rawUrl = typeof link?.url === 'string' ? link.url.trim() : '';
+        const urlAttr = escapeHtml(rawUrl);
+        const urlLabel = rawUrl ? escapeHtml(rawUrl) : '未配置链接';
+        const description = link?.description ? escapeHtml(link.description) : '';
+        const tooltip = description ? `<div class="tooltip">${description}</div>` : '';
+        const icon = sanitizeSvg(link?.icon) || defaultIcon;
+
+        return `
+          <div class="link-item" data-url="${urlAttr}">
+            <div class="link-icon">${icon}</div>
+            <div class="link-content">
+              <div class="link-title">${title}</div>
+              <div class="link-url">${urlLabel}</div>
+              ${tooltip}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderContent() {
+        if (!Array.isArray(navigationData) || navigationData.length === 0) {
+          categoriesContainer.innerHTML = '<div class="empty-state">暂无导航数据，请点击“打开编辑器”进行维护。</div>';
+          return;
+        }
+
+        const html = navigationData
+          .map((category = {}) => {
+            const title = escapeHtml(category?.title || '未命名分类');
+            const links =
+              Array.isArray(category?.links) && category.links.length
+                ? category.links.map(createLinkMarkup).join('')
+                : '<div class="link-placeholder">该分组暂无链接</div>';
+
+            return `
+              <div class="category">
+                <div class="category-header"><h2 class="category-title">${title}</h2></div>
+                <div class="links">
+                  ${links}
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+
+        categoriesContainer.innerHTML = html;
+      }
+
+      function populateEditor() {
+        if (!editorTextarea) {
+          return;
+        }
+        const snapshot = Array.isArray(navigationData) ? navigationData : [];
+        editorTextarea.value = JSON.stringify(snapshot, null, 2);
+      }
+
+      function openEditor() {
+        if (!editorPanel || !editorTextarea || !toggleEditorButton) {
+          return;
+        }
+        populateEditor();
+        editorPanel.classList.remove('hidden');
+        editorPanel.setAttribute('aria-hidden', 'false');
+        toggleEditorButton.textContent = '关闭编辑器';
+        editorOpen = true;
+        editorTextarea.focus();
+      }
+
+      function closeEditor() {
+        if (!editorPanel || !toggleEditorButton) {
+          return;
+        }
+        editorPanel.classList.add('hidden');
+        editorPanel.setAttribute('aria-hidden', 'true');
+        toggleEditorButton.textContent = '打开编辑器';
+        editorOpen = false;
+      }
+
+      async function fetchNavigationData() {
+        categoriesContainer.innerHTML = '<div class="empty-state">正在加载导航数据...</div>';
+        setStatus('正在加载导航数据...', 'info');
+
+        // 检测是否通过 HTTP 协议访问（而不是 file://）
+        const isHttpProtocol = window.location.protocol.startsWith('http');
+        
+        // 获取当前页面的目录路径，用于构建 JSON 文件的绝对路径
+        const currentDir = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        const jsonPath = currentDir + 'data/navigation-data.json';
+
+        if (isHttpProtocol) {
+          // 服务器模式：优先通过 API 获取
+          try {
+            const response = await fetch('/api/navigation');
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
+            navigationData = await response.json();
+            renderContent();
+            setStatus('导航数据加载完成，可以进行维护。', 'success');
+            if (toggleEditorButton) {
+              toggleEditorButton.disabled = false;
+            }
+            if (subtitle) {
+              subtitle.textContent = '服务器模式 - 可编辑和保存';
+            }
+            return;
+          } catch (error) {
+            console.warn('API 模式失败，尝试静态模式:', error);
+            // API 失败，尝试直接读取 JSON
+            try {
+              const jsonResponse = await fetch(jsonPath);
+              if (!jsonResponse.ok) {
+                throw new Error(`HTTP ${jsonResponse.status}`);
+              }
+              navigationData = await jsonResponse.json();
+              renderContent();
+              setStatus('以静态模式加载数据（无法保存）', 'info');
+              if (toggleEditorButton) {
+                toggleEditorButton.disabled = true;
+              }
+              if (subtitle) {
+                subtitle.textContent = '静态模式 - 可查看，无法保存';
+              }
+              return;
+            } catch (fallbackError) {
+              console.error('静态模式也失败，使用默认数据:', fallbackError);
+              // 使用默认数据作为最后的回退
+              navigationData = DEFAULT_NAVIGATION_DATA;
+              renderContent();
+              setStatus('使用默认数据（无法保存）', 'info');
+              if (toggleEditorButton) {
+                toggleEditorButton.disabled = true;
+              }
+              if (subtitle) {
+                subtitle.textContent = '静态模式 - 可查看，无法保存';
+              }
+              return;
+            }
           }
+        } else {
+          // 静态模式：直接读取 JSON 文件（从 file:// 协议）
+          try {
+            const jsonResponse = await fetch(jsonPath);
+            if (!jsonResponse.ok) {
+              throw new Error(`HTTP ${jsonResponse.status}`);
+            }
+            navigationData = await jsonResponse.json();
+            renderContent();
+            setStatus('以静态模式加载数据（无法保存）', 'info');
+            if (toggleEditorButton) {
+              toggleEditorButton.disabled = true;
+            }
+            if (subtitle) {
+              subtitle.textContent = '静态模式 - 可查看，无法保存';
+            }
+          } catch (fallbackError) {
+            console.error('静态模式失败，使用默认数据:', fallbackError);
+            // 使用默认数据作为最后的回退
+            navigationData = DEFAULT_NAVIGATION_DATA;
+            renderContent();
+            setStatus('使用默认数据（无法保存）', 'info');
+            if (toggleEditorButton) {
+              toggleEditorButton.disabled = true;
+            }
+            if (subtitle) {
+              subtitle.textContent = '静态模式 - 可查看，无法保存';
+            }
+          }
+        }
+      }
+
+      async function handleSave() {
+        if (!editorTextarea) {
+          return;
+        }
+
+        let parsed;
+        try {
+          parsed = JSON.parse(editorTextarea.value);
+        } catch (error) {
+          setStatus(`JSON 解析失败：${error.message}`, 'error', false);
+          editorTextarea.focus();
+          return;
+        }
+
+        setStatus('正在保存...', 'info', false);
+
+        try {
+          const response = await fetch('/api/navigation', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(parsed)
+          });
+
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            const extra = Array.isArray(result?.errors) && result.errors.length
+              ? `（${result.errors.join('；')}）`
+              : result?.detail
+                ? `（${result.detail}）`
+                : '';
+            throw new Error(`${result?.message || '保存失败'}${extra}`);
+          }
+
+          navigationData = parsed;
+          renderContent();
+          setStatus('保存成功，数据已同步。', 'success');
+          closeEditor();
+        } catch (error) {
+          setStatus(`保存失败：${error.message}`, 'error', false);
+        }
+      }
+
+      categoriesContainer.addEventListener('click', event => {
+        const linkItem = event.target.closest('.link-item');
+        if (!linkItem) {
+          return;
+        }
+        const rawUrl = linkItem.dataset.url || '';
+        const url = normalizeUrl(rawUrl);
+
+        if (url) {
+          window.open(url, '_blank');
         }
       });
 
+      toggleEditorButton?.addEventListener('click', () => {
+        if (toggleEditorButton.disabled) {
+          return;
+        }
+        if (editorOpen) {
+          closeEditor();
+        } else {
+          openEditor();
+        }
+      });
+
+      cancelButton?.addEventListener('click', () => {
+        closeEditor();
+      });
+
+      saveButton?.addEventListener('click', () => {
+        handleSave();
+      });
+
+      fetchNavigationData();
     });
   </script>
 </body>
