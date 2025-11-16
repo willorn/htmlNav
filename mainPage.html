@@ -60,6 +60,191 @@
       font-size: 1rem;
     }
 
+    .title-greeting {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .title-weather {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.6rem;
+    }
+
+    .weather-panel {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border-radius: 18px;
+      background: rgba(20, 20, 24, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .weather-panel-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .weather-panel-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .weather-panel-hint {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .weather-panel-source {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .weather-card-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .weather-card {
+      background: rgba(12, 12, 14, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      min-height: 200px;
+      outline: none;
+    }
+
+    .weather-card:hover,
+    .weather-card:focus-within {
+      border-color: rgba(0, 122, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .weather-card:focus-visible {
+      outline: 2px solid var(--accent-color);
+      outline-offset: 3px;
+    }
+
+    .weather-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.6rem;
+    }
+
+    .weather-station-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .weather-station-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .weather-updated {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .weather-condensed {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .weather-slot {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .weather-slot-time {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .weather-slot-summary {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .weather-slot-extra {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .weather-timeline {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 0.5rem;
+      padding-top: 0.6rem;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+    }
+
+    .weather-card:hover .weather-timeline,
+    .weather-card:focus-within .weather-timeline {
+      max-height: 500px;
+      opacity: 1;
+    }
+
+    .weather-timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    .weather-timeline-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .weather-timeline-item.past {
+      opacity: 0.8;
+    }
+
+    .weather-timeline-time {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .weather-timeline-temp {
+      font-weight: 600;
+    }
+
+    .weather-placeholder {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 0.8rem 0;
+    }
+
     .main-area {
       max-width: 100%;
     }
@@ -613,9 +798,53 @@
   <main class="main-area">
     <div class="container">
       <header>
+        <p class="title-greeting">早安，开启高效的一天 ☀️</p>
+        <p class="title-weather" data-weather-line>深圳天气同步中...</p>
         <h1>All in One</h1>
         <p class="subtitle">NCIS 团队高频资源导航面板</p>
       </header>
+
+      <section class="weather-panel" data-weather-panel>
+        <div class="weather-panel-head">
+          <div>
+            <div class="weather-panel-title">地铁站逐小时天气</div>
+            <p class="weather-panel-hint">默认展示当前与下一小时，悬停/聚焦卡片即可查看过去 3 小时至未来 8 小时。</p>
+          </div>
+          <span class="weather-panel-source">数据来源：Open-Meteo</span>
+        </div>
+        <div class="weather-card-grid">
+          <article class="weather-card" data-weather-card data-station-card="shangmeilin" tabindex="0">
+            <div class="weather-card-head">
+              <div>
+                <div class="weather-station-title">上梅林地铁站</div>
+                <div class="weather-station-subtitle">Shangmeilin Station</div>
+              </div>
+              <div class="weather-updated" data-station-updated="shangmeilin">数据同步中...</div>
+            </div>
+            <div class="weather-condensed" data-station-condensed="shangmeilin">
+              <div class="weather-placeholder">正在获取实时天气...</div>
+            </div>
+            <div class="weather-timeline" data-station-timeline="shangmeilin">
+              <div class="weather-placeholder">悬停卡片即可展开更长时间线。</div>
+            </div>
+          </article>
+          <article class="weather-card" data-weather-card data-station-card="xikeng" tabindex="0">
+            <div class="weather-card-head">
+              <div>
+                <div class="weather-station-title">西坑地铁站（茜坑）</div>
+                <div class="weather-station-subtitle">Xikeng Station</div>
+              </div>
+              <div class="weather-updated" data-station-updated="xikeng">数据同步中...</div>
+            </div>
+            <div class="weather-condensed" data-station-condensed="xikeng">
+              <div class="weather-placeholder">正在获取实时天气...</div>
+            </div>
+            <div class="weather-timeline" data-station-timeline="xikeng">
+              <div class="weather-placeholder">悬停卡片即可展开更长时间线。</div>
+            </div>
+          </article>
+        </div>
+      </section>
 
       <div class="categories"></div>
     </div>
@@ -670,6 +899,31 @@
   const MAX_RECENT_LINKS = 5;
   const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast?latitude=22.55&longitude=114.05&current_weather=true&timezone=Asia%2FShanghai';
   const WEATHER_FETCH_TIMEOUT = 5000;
+  const STATION_WEATHER_CONFIGS = [
+    {
+      id: 'shangmeilin',
+      name: '上梅林地铁站',
+      englishName: 'Shangmeilin Station',
+      latitude: 22.5711039,
+      longitude: 114.0553309
+    },
+    {
+      id: 'xikeng',
+      name: '西坑地铁站（茜坑）',
+      englishName: 'Xikeng Station',
+      latitude: 22.7006976,
+      longitude: 114.0361803
+    }
+  ];
+  const STATION_WEATHER_SETTINGS = {
+    timezone: 'Asia/Shanghai',
+    timezoneOffsetSuffix: '+08:00',
+    hourlyParams: 'temperature_2m,relative_humidity_2m,precipitation_probability,weathercode',
+    pastHours: 3,
+    futureHours: 8,
+    condensedOffsets: [0, 1],
+    fetchTimeout: 8000
+  };
 
   const navigationData = [
     {
@@ -804,12 +1058,22 @@
     const domainSummaryEl = document.querySelector('[data-stat="domains"]');
     const heroGreeting = document.querySelector('[data-greeting]');
     const heroTip = document.querySelector('[data-hero-tip]');
+    const headerWeatherLine = document.querySelector('[data-weather-line]');
+    const weatherPanel = document.querySelector('[data-weather-panel]');
     const hotTagsContainer = document.querySelector('[data-hot-tags]');
     const heroPanel = document.querySelector('[data-hero]');
     const miniTip = document.querySelector('[data-mini-tip]');
     const recentList = document.querySelector('[data-recent-list]');
     const clearHistoryBtn = document.querySelector('[data-clear-history]');
     const toastEl = document.querySelector('[data-toast]');
+    const stationElementMap = new Map();
+    STATION_WEATHER_CONFIGS.forEach(station => {
+      stationElementMap.set(station.id, {
+        condensed: document.querySelector(`[data-station-condensed="${station.id}"]`),
+        timeline: document.querySelector(`[data-station-timeline="${station.id}"]`),
+        updated: document.querySelector(`[data-station-updated="${station.id}"]`)
+      });
+    });
 
     let toastTimer = null;
     let activeTag = 'all';
@@ -827,6 +1091,9 @@
     renderTags(stats.tagCounts, stats.linkCount);
     renderContent(activeTag);
     renderRecentLinks(recentLinks);
+    if (weatherPanel) {
+      bootstrapStationWeather();
+    }
 
     categoriesContainer.addEventListener('click', function (event) {
       const toggleBtn = event.target.closest('[data-toggle-category]');
@@ -1017,12 +1284,29 @@
     }
 
     function refreshWeatherTip() {
-      fetchShenzhenWeather().then(weather => {
-        const formatted = formatWeatherTip(weather);
-        if (formatted && heroTip) {
-          heroTip.textContent = formatted;
-        }
-      });
+      fetchShenzhenWeather()
+        .then(weather => {
+          const formatted = formatWeatherTip(weather);
+          if (formatted) {
+            if (heroTip) {
+              heroTip.textContent = formatted;
+            }
+            if (headerWeatherLine) {
+              headerWeatherLine.textContent = formatted;
+            }
+            return;
+          }
+          applyWeatherFallback();
+        })
+        .catch(() => {
+          applyWeatherFallback();
+        });
+    }
+
+    function applyWeatherFallback() {
+      if (headerWeatherLine) {
+        headerWeatherLine.textContent = '天气信息暂不可用';
+      }
     }
 
     function renderMiniTip(currentStats) {
@@ -1084,6 +1368,307 @@
           `;
         })
         .join('');
+    }
+
+    function bootstrapStationWeather() {
+      STATION_WEATHER_CONFIGS.forEach(station => {
+        fetchStationWeather(station)
+          .then(hourlyMap => {
+            if (!hourlyMap || !hourlyMap.size) {
+              renderStationError(station.id);
+              return;
+            }
+            renderStationWeather(station, hourlyMap);
+          })
+          .catch(() => {
+            renderStationError(station.id);
+          });
+      });
+    }
+
+    function fetchStationWeather(station) {
+      const url = buildStationWeatherUrl(station);
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      let timeoutId = null;
+      if (controller) {
+        timeoutId = setTimeout(() => controller.abort(), STATION_WEATHER_SETTINGS.fetchTimeout);
+      }
+      return fetch(url, {
+        signal: controller ? controller.signal : undefined,
+        cache: 'no-store'
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`接口响应异常：${response.status}`);
+          }
+          return response.json();
+        })
+        .then(payload => normalizeStationHourly(payload))
+        .finally(() => {
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+          }
+        });
+    }
+
+    function buildStationWeatherUrl(station) {
+      const params = new URLSearchParams({
+        latitude: station.latitude,
+        longitude: station.longitude,
+        hourly: STATION_WEATHER_SETTINGS.hourlyParams,
+        past_days: '1',
+        forecast_days: '2',
+        timezone: STATION_WEATHER_SETTINGS.timezone
+      });
+      return `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+    }
+
+    function normalizeStationHourly(payload) {
+      const hourly = payload && payload.hourly;
+      if (
+        !hourly ||
+        !Array.isArray(hourly.time) ||
+        !Array.isArray(hourly.temperature_2m) ||
+        !Array.isArray(hourly.weathercode)
+      ) {
+        return null;
+      }
+      const result = new Map();
+      for (let index = 0; index < hourly.time.length; index++) {
+        const timestamp = parseShanghaiTime(hourly.time[index]);
+        if (Number.isNaN(timestamp)) {
+          continue;
+        }
+        result.set(timestamp, {
+          temperature: safeNumber(hourly.temperature_2m, index),
+          humidity: safeNumber(hourly.relative_humidity_2m, index),
+          precipitationProbability: safeNumber(hourly.precipitation_probability, index),
+          weathercode: safeNumber(hourly.weathercode, index)
+        });
+      }
+      return result;
+    }
+
+    function renderStationWeather(station, hourlyMap) {
+      const target = stationElementMap.get(station.id);
+      if (!target) {
+        return;
+      }
+      const now = getShanghaiNow();
+      const currentHourEpoch = alignToHour(now);
+      if (target.updated) {
+        target.updated.textContent = `更新：${formatStationUpdatedLabel(now)}`;
+      }
+      if (target.condensed) {
+        target.condensed.innerHTML = buildCondensedSlots(currentHourEpoch, hourlyMap);
+      }
+      if (target.timeline) {
+        target.timeline.innerHTML = buildTimelineSlots(currentHourEpoch, hourlyMap);
+      }
+    }
+
+    function renderStationError(stationId) {
+      const target = stationElementMap.get(stationId);
+      if (!target) {
+        return;
+      }
+      if (target.condensed) {
+        target.condensed.innerHTML = '<div class="weather-placeholder">天气数据暂不可用，请稍后刷新。</div>';
+      }
+      if (target.timeline) {
+        target.timeline.innerHTML = '<div class="weather-placeholder">暂无历史/未来数据。</div>';
+      }
+      if (target.updated) {
+        target.updated.textContent = '更新失败';
+      }
+    }
+
+    function buildCondensedSlots(baseHourEpoch, hourlyMap) {
+      const offsets = STATION_WEATHER_SETTINGS.condensedOffsets || [0, 1];
+      const slots = offsets.map(offset => {
+        const slotEpoch = baseHourEpoch + offset * getHourMs();
+        const entry = hourlyMap.get(slotEpoch);
+        return `
+          <div class="weather-slot">
+            <div class="weather-slot-time">${formatCondensedTimeLabel(slotEpoch, offset)}</div>
+            <div class="weather-slot-summary">${formatSlotSummary(entry)}</div>
+            <div class="weather-slot-extra">${formatSlotExtra(entry)}</div>
+          </div>
+        `;
+      });
+      return slots.join('') || '<div class="weather-placeholder">暂无可用时间点。</div>';
+    }
+
+    function buildTimelineSlots(baseHourEpoch, hourlyMap) {
+      const offsets = [];
+      for (let offset = -STATION_WEATHER_SETTINGS.pastHours; offset <= STATION_WEATHER_SETTINGS.futureHours; offset++) {
+        offsets.push(offset);
+      }
+      if (!offsets.length) {
+        return '<div class="weather-placeholder">暂无时间线。</div>';
+      }
+      const items = offsets
+        .map(offset => {
+          const slotEpoch = baseHourEpoch + offset * getHourMs();
+          const entry = hourlyMap.get(slotEpoch);
+          return `
+            <div class="weather-timeline-item ${offset < 0 ? 'past' : ''}">
+              <div class="weather-timeline-time">${formatTimelineTimeLabel(slotEpoch, offset)}</div>
+              <div class="weather-timeline-temp">${formatTimelineSummary(entry)}</div>
+              <div class="weather-slot-extra">${formatTimelineExtra(entry)}</div>
+            </div>
+          `;
+        })
+        .join('');
+      return `<div class="weather-timeline-grid">${items}</div>`;
+    }
+
+    function formatSlotSummary(entry) {
+      if (!entry || !isValidNumber(entry.temperature)) {
+        const desc = entry ? describeWeatherCode(entry.weathercode) : '暂无数据';
+        return `--°C · ${desc}`;
+      }
+      const desc = describeWeatherCode(entry.weathercode);
+      return `${Math.round(entry.temperature)}°C · ${desc}`;
+    }
+
+    function formatSlotExtra(entry) {
+      if (!entry) {
+        return '湿度 -- · 降水 --';
+      }
+      const extras = [];
+      if (isValidNumber(entry.humidity)) {
+        extras.push(`湿度 ${Math.round(entry.humidity)}%`);
+      }
+      if (isValidNumber(entry.precipitationProbability)) {
+        extras.push(`降水 ${Math.round(entry.precipitationProbability)}%`);
+      }
+      return extras.length ? extras.join(' · ') : '暂无湿度/降水信息';
+    }
+
+    function formatTimelineSummary(entry) {
+      if (!entry) {
+        return '--°C · --';
+      }
+      const desc = describeWeatherCode(entry.weathercode);
+      return `${isValidNumber(entry.temperature) ? `${Math.round(entry.temperature)}°C` : '--°C'} · ${desc}`;
+    }
+
+    function formatTimelineExtra(entry) {
+      if (!entry) {
+        return '湿度/降水 --';
+      }
+      const parts = [];
+      if (isValidNumber(entry.humidity)) {
+        parts.push(`湿度 ${Math.round(entry.humidity)}%`);
+      }
+      if (isValidNumber(entry.precipitationProbability)) {
+        parts.push(`降水 ${Math.round(entry.precipitationProbability)}%`);
+      }
+      return parts.length ? parts.join(' · ') : '无额外数据';
+    }
+
+    function formatCondensedTimeLabel(epoch, offset) {
+      if (offset === 0) {
+        return '当前小时';
+      }
+      if (offset === 1) {
+        return '下一小时';
+      }
+      return formatHourLabel(epoch);
+    }
+
+    function formatTimelineTimeLabel(epoch, offset) {
+      const label = formatHourLabel(epoch);
+      if (offset === 0) {
+        return `${label}（当前）`;
+      }
+      return offset > 0 ? `${label}（+${offset}h）` : `${label}（${offset}h）`;
+    }
+
+    function formatHourLabel(epoch) {
+      try {
+        const formatter = new Intl.DateTimeFormat('zh-CN', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+          timeZone: STATION_WEATHER_SETTINGS.timezone
+        });
+        return formatter.format(new Date(epoch));
+      } catch (error) {
+        return '';
+      }
+    }
+
+    function formatStationUpdatedLabel(date) {
+      try {
+        return new Intl.DateTimeFormat('zh-CN', {
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+          timeZone: STATION_WEATHER_SETTINGS.timezone
+        }).format(date);
+      } catch (error) {
+        return '';
+      }
+    }
+
+    function parseShanghaiTime(timeString) {
+      if (!timeString) {
+        return NaN;
+      }
+      const normalized = timeString.length > 16 ? timeString : `${timeString}:00`;
+      return Date.parse(`${normalized}${STATION_WEATHER_SETTINGS.timezoneOffsetSuffix}`);
+    }
+
+    function getShanghaiNow() {
+      const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: STATION_WEATHER_SETTINGS.timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      const parts = formatter.formatToParts(new Date());
+      const lookup = {};
+      parts.forEach(part => {
+        if (part.type !== 'literal') {
+          lookup[part.type] = part.value;
+        }
+      });
+      const iso = `${lookup.year}-${lookup.month}-${lookup.day}T${lookup.hour}:${lookup.minute}:${lookup.second}${STATION_WEATHER_SETTINGS.timezoneOffsetSuffix}`;
+      return new Date(iso);
+    }
+
+    function alignToHour(date) {
+      if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+        return Date.now();
+      }
+      const clone = new Date(date.getTime());
+      clone.setMinutes(0, 0, 0);
+      return clone.getTime();
+    }
+
+    function safeNumber(collection, index) {
+      if (!Array.isArray(collection)) {
+        return NaN;
+      }
+      const raw = collection[index];
+      const parsed = Number(raw);
+      return Number.isFinite(parsed) ? parsed : NaN;
+    }
+
+    function isValidNumber(value) {
+      return typeof value === 'number' && Number.isFinite(value);
+    }
+
+    function getHourMs() {
+      return 60 * 60 * 1000;
     }
 
     function matchesTag(link, filterTag) {
