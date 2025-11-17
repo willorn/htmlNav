@@ -280,15 +280,8 @@
       border-top: 1px solid rgba(255, 255, 255, 0.05);
       margin-top: 0.5rem;
       padding-top: 0.6rem;
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.3s ease, opacity 0.3s ease;
-    }
-
-    .weather-card:hover .weather-timeline,
-    .weather-card:focus-within .weather-timeline {
-      max-height: 500px;
+      max-height: none;
+      overflow: visible;
       opacity: 1;
     }
 
@@ -355,7 +348,9 @@
       align-items: flex-end;
       gap: 0.75rem;
       z-index: 30;
-      pointer-events: none;
+      pointer-events: auto;
+      width: 72px;
+      overflow: visible;
     }
 
     .side-panel {
@@ -363,7 +358,7 @@
       width: 72px;
       max-height: calc(100vh - 4rem);
       border-radius: 24px 0 0 24px;
-      background: rgba(15, 15, 20, 0.7);
+      background: rgba(15, 15, 20, 0.75);
       border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
       overflow: hidden;
@@ -376,7 +371,7 @@
 
     .side-panel:hover,
     .side-panel:focus-within {
-      width: 360px;
+      width: 820px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
       backdrop-filter: blur(18px);
     }
@@ -851,7 +846,8 @@
         align-items: stretch;
         gap: 1rem;
         padding-right: 0;
-        pointer-events: auto;
+        max-height: none;
+        overflow: visible;
       }
 
       .side-panel {
@@ -863,6 +859,7 @@
       .side-panel:hover,
       .side-panel:focus-within {
         width: 100%;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
       }
 
       .panel-hint {
