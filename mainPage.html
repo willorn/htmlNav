@@ -92,12 +92,12 @@
     }
 
     .weather-panel {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      border-radius: 18px;
-      background: rgba(20, 20, 24, 0.6);
+      margin-bottom: 1.2rem;
+      padding: 1rem;
+      border-radius: 16px;
+      background: rgba(20, 20, 24, 0.75);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
     }
 
     .weather-panel-head {
@@ -130,6 +130,44 @@
       display: grid;
       gap: 1rem;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .side-panel .weather-panel {
+      margin-bottom: 0.5rem;
+      padding: 0.9rem;
+      background: rgba(16, 16, 22, 0.85);
+    }
+
+    .side-panel .weather-panel-head {
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .side-panel .weather-panel-title {
+      font-size: 1rem;
+    }
+
+    .side-panel .weather-panel-hint {
+      font-size: 0.8rem;
+    }
+
+    .side-panel .weather-panel-source {
+      font-size: 0.75rem;
+    }
+
+    .side-panel .weather-card-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .side-panel .weather-card {
+      min-height: auto;
+      padding: 0.9rem;
+    }
+
+    .side-panel .weather-condensed {
+      grid-template-columns: 1fr;
     }
 
     .weather-card {
@@ -307,12 +345,22 @@
       max-width: 100%;
     }
 
-    .side-panel {
+    .side-panels {
       position: fixed;
       top: 1.5rem;
       right: 0;
-      width: 72px;
       padding-right: calc(env(safe-area-inset-right, 0px));
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.75rem;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .side-panel {
+      position: relative;
+      width: 72px;
       max-height: calc(100vh - 4rem);
       border-radius: 24px 0 0 24px;
       background: rgba(15, 15, 20, 0.7);
@@ -322,14 +370,13 @@
       transition: width 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
       display: flex;
       flex-direction: column;
-      z-index: 30;
       backdrop-filter: blur(10px);
+      pointer-events: auto;
     }
 
     .side-panel:hover,
     .side-panel:focus-within {
       width: 360px;
-      right: 0;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
       backdrop-filter: blur(18px);
     }
@@ -381,7 +428,7 @@
       flex: 0;
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1rem;
       max-height: 0;
       transition: opacity 0.25s ease, padding 0.25s ease, max-height 0.25s ease;
     }
@@ -390,7 +437,7 @@
     .side-panel:focus-within .panel-body {
       opacity: 1;
       pointer-events: auto;
-      padding: 1.2rem;
+      padding: 1rem 1.2rem;
       flex: 1;
       overflow-y: auto;
       max-height: calc(100vh - 4rem);
@@ -798,11 +845,18 @@
         margin-right: 0;
       }
 
-      .side-panel {
+      .side-panels {
         position: static;
         width: 100%;
+        align-items: stretch;
+        gap: 1rem;
+        padding-right: 0;
+        pointer-events: auto;
+      }
+
+      .side-panel {
+        width: 100%;
         max-height: none;
-        margin-top: 0.5rem;
       }
 
       .side-panel,
@@ -860,89 +914,122 @@
         <p class="title-weather" data-weather-line>深圳天气同步中...</p>
       </header>
 
-      <section class="weather-panel" data-weather-panel>
-        <div class="weather-panel-head">
-          <div>
-            <div class="weather-panel-title">地铁站逐小时天气</div>
-            <p class="weather-panel-hint">默认只展示当前与下一小时，鼠标悬停或聚焦卡片即可查看过往 3 小时与未来 11 小时的详细时间线。</p>
-          </div>
-          <span class="weather-panel-source">数据来源：Open-Meteo</span>
-        </div>
-        <div class="weather-card-grid">
-          <article class="weather-card" data-weather-card data-station-card="shangmeilin" tabindex="0">
-            <div class="weather-card-head">
-              <div>
-                <div class="weather-station-title">上梅林地铁站</div>
-                <div class="weather-station-subtitle">Shangmeilin Station</div>
-              </div>
-              <div class="weather-updated" data-station-updated="shangmeilin">数据同步中...</div>
-            </div>
-            <div class="weather-condensed" data-station-condensed="shangmeilin">
-              <div class="weather-placeholder">正在获取实时天气...</div>
-            </div>
-            <div class="weather-timeline" data-station-timeline="shangmeilin">
-              <div class="weather-placeholder">悬停卡片即可展开更长时间线。</div>
-            </div>
-          </article>
-          <article class="weather-card" data-weather-card data-station-card="xikeng" tabindex="0">
-            <div class="weather-card-head">
-              <div>
-                <div class="weather-station-title">西坑地铁站（茜坑）</div>
-                <div class="weather-station-subtitle">Xikeng Station</div>
-              </div>
-              <div class="weather-updated" data-station-updated="xikeng">数据同步中...</div>
-            </div>
-            <div class="weather-condensed" data-station-condensed="xikeng">
-              <div class="weather-placeholder">正在获取实时天气...</div>
-            </div>
-            <div class="weather-timeline" data-station-timeline="xikeng">
-              <div class="weather-placeholder">悬停卡片即可展开更长时间线。</div>
-            </div>
-          </article>
-        </div>
-      </section>
-
       <div class="categories"></div>
     </div>
   </main>
+  <div class="side-panels">
+    <aside class="side-panel" data-side-panel aria-label="导航助理">
+      <div class="panel-hint">
+        <svg class="panel-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M8 16l2-5 5-2-2 5-5 2z"></path>
+        </svg>
+        <span class="sr-only">导航助理</span>
+      </div>
+      <div class="panel-body">
+        <section class="info-panel">
+          <div class="hero-card" data-hero>
+            <div class="hero-greeting" data-greeting>欢迎回来 👋</div>
+            <p class="hero-tip" data-hero-tip>今日暂无提醒，保持好状态继续推进项目吧。</p>
+            <div class="hero-quick">
+              <span>今日热词：</span>
+              <div class="hero-tags" data-hot-tags></div>
+            </div>
+          </div>
 
-  <aside class="side-panel" data-side-panel aria-label="导航助理">
-    <div class="panel-hint">
-      <svg class="panel-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="9"></circle>
-        <path d="M8 16l2-5 5-2-2 5-5 2z"></path>
-      </svg>
-      <span class="sr-only">导航助理</span>
-    </div>
-    <div class="panel-body">
-      <section class="info-panel">
-        <div class="hero-card" data-hero>
-          <div class="hero-greeting" data-greeting>欢迎回来 👋</div>
-          <p class="hero-tip" data-hero-tip>今日暂无提醒，保持好状态继续推进项目吧。</p>
-          <div class="hero-quick">
-            <span>今日热词：</span>
-            <div class="hero-tags" data-hot-tags></div>
+          <div class="recent-panel">
+            <div class="recent-header">
+              <span>最近访问</span>
+              <button class="recent-clear" data-clear-history>清除</button>
+            </div>
+            <div class="recent-list" data-recent-list>
+              <div class="recent-empty">还没有访问记录，点击任意链接即可记录。</div>
+            </div>
           </div>
-        </div>
+          <div class="domain-summary" data-stat="domains">飞书 0 / 内网 0 / 外部 0</div>
+          <div class="tags-panel">
+            <div class="tags-label" data-active-tag>快速标签（点击筛选）</div>
+            <div class="tags-scroll" data-tags-container></div>
+          </div>
+          <div class="mini-tip" data-mini-tip>小提示：合理安排深夜访问，注意 VPN 与网络环境切换。</div>
+        </section>
+      </div>
+    </aside>
 
-        <div class="recent-panel">
-          <div class="recent-header">
-            <span>最近访问</span>
-            <button class="recent-clear" data-clear-history>清除</button>
+    <aside class="side-panel" aria-label="西坑地铁站逐小时天气">
+      <div class="panel-hint">
+        <svg class="panel-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5a8.5 8.5 0 0 1 8.5-8.5h.5a8.5 8.5 0 0 1 8 8v-.5z"></path>
+        </svg>
+        <span class="sr-only">西坑地铁站逐小时天气</span>
+      </div>
+      <div class="panel-body">
+        <section class="weather-panel" data-weather-panel>
+          <div class="weather-panel-head">
+            <div>
+              <div class="weather-panel-title">西坑地铁站（茜坑）</div>
+              <p class="weather-panel-hint">逐小时天气同步，悬停查看完整时间线。</p>
+            </div>
+            <span class="weather-panel-source">数据来源：Open-Meteo</span>
           </div>
-          <div class="recent-list" data-recent-list>
-            <div class="recent-empty">还没有访问记录，点击任意链接即可记录。</div>
+          <div class="weather-card-grid">
+            <article class="weather-card" data-weather-card data-station-card="xikeng" tabindex="0">
+              <div class="weather-card-head">
+                <div>
+                  <div class="weather-station-title">西坑地铁站（茜坑）</div>
+                  <div class="weather-station-subtitle">Xikeng Station</div>
+                </div>
+                <div class="weather-updated" data-station-updated="xikeng">数据同步中...</div>
+              </div>
+              <div class="weather-condensed" data-station-condensed="xikeng">
+                <div class="weather-placeholder">正在获取实时天气...</div>
+              </div>
+              <div class="weather-timeline" data-station-timeline="xikeng">
+                <div class="weather-placeholder">悬停卡片即可展开更长时间线。</div>
+              </div>
+            </article>
           </div>
-        </div>
-        <div class="domain-summary" data-stat="domains">飞书 0 / 内网 0 / 外部 0</div>
-        <div class="tags-panel">
-          <div class="tags-label" data-active-tag>快速标签（点击筛选）</div>
-          <div class="tags-scroll" data-tags-container></div>
-        </div>
-        <div class="mini-tip" data-mini-tip>小提示：合理安排深夜访问，注意 VPN 与网络环境切换。</div>
-      </section>
-    </div>
-  </aside>
+        </section>
+      </div>
+    </aside>
+
+    <aside class="side-panel" aria-label="上梅林地铁站逐小时天气">
+      <div class="panel-hint">
+        <svg class="panel-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.8 15A9 9 0 1 1 9 2.2 7 7 0 0 0 21.8 15z"></path>
+        </svg>
+        <span class="sr-only">上梅林地铁站逐小时天气</span>
+      </div>
+      <div class="panel-body">
+        <section class="weather-panel" data-weather-panel>
+          <div class="weather-panel-head">
+            <div>
+              <div class="weather-panel-title">上梅林地铁站</div>
+              <p class="weather-panel-hint">逐小时天气同步，悬停查看完整时间线。</p>
+            </div>
+            <span class="weather-panel-source">数据来源：Open-Meteo</span>
+          </div>
+          <div class="weather-card-grid">
+            <article class="weather-card" data-weather-card data-station-card="shangmeilin" tabindex="0">
+              <div class="weather-card-head">
+                <div>
+                  <div class="weather-station-title">上梅林地铁站</div>
+                  <div class="weather-station-subtitle">Shangmeilin Station</div>
+                </div>
+                <div class="weather-updated" data-station-updated="shangmeilin">数据同步中...</div>
+              </div>
+              <div class="weather-condensed" data-station-condensed="shangmeilin">
+                <div class="weather-placeholder">正在获取实时天气...</div>
+              </div>
+              <div class="weather-timeline" data-station-timeline="shangmeilin">
+                <div class="weather-placeholder">悬停卡片即可展开更长时间线。</div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </aside>
+  </div>
 </div>
 
 <div class="toast" data-toast>已打开链接</div>
@@ -1115,7 +1202,7 @@
     const heroGreeting = document.querySelector('[data-greeting]');
     const heroTip = document.querySelector('[data-hero-tip]');
     const headerWeatherLine = document.querySelector('[data-weather-line]');
-    const weatherPanel = document.querySelector('[data-weather-panel]');
+    const weatherPanels = document.querySelectorAll('[data-weather-panel]');
     const hotTagsContainer = document.querySelector('[data-hot-tags]');
     const heroPanel = document.querySelector('[data-hero]');
     const miniTip = document.querySelector('[data-mini-tip]');
@@ -1147,7 +1234,7 @@
     renderTags(stats.tagCounts, stats.linkCount);
     renderContent(activeTag);
     renderRecentLinks(recentLinks);
-    if (weatherPanel) {
+    if (weatherPanels.length > 0) {
       bootstrapStationWeather();
     }
 
