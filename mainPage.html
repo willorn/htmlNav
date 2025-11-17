@@ -166,9 +166,6 @@
       padding: 0.9rem;
     }
 
-    .side-panel .weather-condensed {
-      grid-template-columns: 1fr;
-    }
 
     .weather-card {
       background: rgba(12, 12, 14, 0.6);
@@ -217,11 +214,6 @@
       color: var(--text-secondary);
     }
 
-    .weather-condensed {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 0.6rem;
-    }
 
     .weather-slot {
       background: rgba(255, 255, 255, 0.03);
@@ -1077,7 +1069,6 @@
     hourlyParams: 'temperature_2m,relative_humidity_2m,precipitation_probability,weathercode',
     pastHours: 3,
     futureHours: 11,
-    condensedOffsets: [0, 1],
     fetchTimeout: 8000
   };
 
@@ -1225,7 +1216,6 @@
     const stationElementMap = new Map();
     STATION_WEATHER_CONFIGS.forEach(station => {
       stationElementMap.set(station.id, {
-        condensed: document.querySelector(`[data-station-condensed="${station.id}"]`),
         timeline: document.querySelector(`[data-station-timeline="${station.id}"]`),
         updated: document.querySelector(`[data-station-updated="${station.id}"]`)
       });
@@ -1615,9 +1605,6 @@
       if (target.updated) {
         target.updated.textContent = `更新：${formatStationUpdatedLabel(now)}`;
       }
-      if (target.condensed) {
-        target.condensed.innerHTML = buildCondensedSlots(currentHourEpoch, hourlyMap);
-      }
       if (target.timeline) {
         target.timeline.innerHTML = buildTimelineSlots(currentHourEpoch, hourlyMap);
       }
@@ -1628,32 +1615,12 @@
       if (!target) {
         return;
       }
-      if (target.condensed) {
-        target.condensed.innerHTML = '<div class="weather-placeholder">天气数据暂不可用，请稍后刷新。</div>';
-      }
       if (target.timeline) {
         target.timeline.innerHTML = '<div class="weather-placeholder">暂无历史/未来数据。</div>';
       }
       if (target.updated) {
         target.updated.textContent = '更新失败';
       }
-    }
-
-    function buildCondensedSlots(baseHourEpoch, hourlyMap) {
-      const offsets = STATION_WEATHER_SETTINGS.condensedOffsets || [0, 1];
-      const slots = offsets.map(offset => {
-        const slotEpoch = baseHourEpoch + offset * getHourMs();
-        const entry = hourlyMap.get(slotEpoch);
-        const slotClass = offset === 0 ? 'weather-slot current' : 'weather-slot';
-        return `
-          <div class="${slotClass}">
-            <div class="weather-slot-time">${formatCondensedTimeLabel(slotEpoch, offset)}</div>
-            <div class="weather-slot-summary">${formatSlotSummary(entry)}</div>
-            <div class="weather-slot-extra">${formatSlotExtra(entry)}</div>
-          </div>
-        `;
-      });
-      return slots.join('') || '<div class="weather-placeholder">暂无可用时间点。</div>';
     }
 
     function buildTimelineSlots(baseHourEpoch, hourlyMap) {
@@ -1687,28 +1654,7 @@
       return `<div class="weather-timeline-grid">${items}</div>`;
     }
 
-    function formatSlotSummary(entry) {
-      if (!entry || !isValidNumber(entry.temperature)) {
-        const desc = entry ? describeWeatherCode(entry.weathercode) : '暂无数据';
-        return `--°C · ${desc}`;
-      }
-      const desc = describeWeatherCode(entry.weathercode);
-      return `${Math.round(entry.temperature)}°C · ${desc}`;
-    }
 
-    function formatSlotExtra(entry) {
-      if (!entry) {
-        return '湿度 -- · 降水 --';
-      }
-      const extras = [];
-      if (isValidNumber(entry.humidity)) {
-        extras.push(`湿度 ${Math.round(entry.humidity)}%`);
-      }
-      if (isValidNumber(entry.precipitationProbability)) {
-        extras.push(`降水 ${Math.round(entry.precipitationProbability)}%`);
-      }
-      return extras.length ? extras.join(' · ') : '暂无湿度/降水信息';
-    }
 
     function formatTimelineSummary(entry) {
       if (!entry) {
@@ -1732,16 +1678,6 @@
       return parts.length ? parts.join(' · ') : '无额外数据';
     }
 
-    function formatCondensedTimeLabel(epoch, offset) {
-      if (offset === 0) {
-        return '当前小时';
-      }
-      if (offset === 1) {
-        return '下一小时';
-      }
-      const hourLabel = formatHourLabel(epoch);
-      return offset > 0 ? `${hourLabel}（+${offset}h）` : hourLabel;
-    }
 
     function formatTimelineTimeLabel(epoch, offset) {
       const label = formatHourLabel(epoch);
