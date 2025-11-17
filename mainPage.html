@@ -70,8 +70,25 @@
 
     .title-weather {
       font-size: 1rem;
-      color: var(--text-secondary);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent-color);
+      background: rgba(0, 122, 255, 0.12);
+      border: 1px solid rgba(0, 122, 255, 0.4);
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
       margin-bottom: 0.6rem;
+    }
+
+    .title-weather::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      box-shadow: 0 0 10px rgba(0, 122, 255, 0.6);
     }
 
     .weather-panel {
@@ -176,6 +193,34 @@
       display: flex;
       flex-direction: column;
       gap: 0.2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .weather-slot.current {
+      border-color: rgba(0, 122, 255, 0.75);
+      background: linear-gradient(135deg, rgba(0, 122, 255, 0.35), rgba(138, 43, 226, 0.25));
+      box-shadow: 0 15px 35px rgba(0, 122, 255, 0.35);
+      color: #fff;
+    }
+
+    .weather-slot.current::after {
+      content: '当前';
+      position: absolute;
+      top: 0.4rem;
+      right: 0.45rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.25);
+      color: #fff;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+    }
+
+    .weather-slot.current .weather-slot-time,
+    .weather-slot.current .weather-slot-extra {
+      color: rgba(255, 255, 255, 0.85);
     }
 
     .weather-slot-time {
@@ -228,6 +273,19 @@
 
     .weather-timeline-item.past {
       opacity: 0.8;
+    }
+
+    .weather-timeline-item.current {
+      border-color: rgba(0, 122, 255, 0.6);
+      background: linear-gradient(135deg, rgba(0, 122, 255, 0.3), rgba(138, 43, 226, 0.15));
+      box-shadow: 0 10px 24px rgba(0, 122, 255, 0.25);
+      color: #fff;
+    }
+
+    .weather-timeline-item.current .weather-timeline-time,
+    .weather-timeline-item.current .weather-timeline-temp,
+    .weather-timeline-item.current .weather-slot-extra {
+      color: rgba(255, 255, 255, 0.9);
     }
 
     .weather-timeline-time {
@@ -800,15 +858,13 @@
       <header>
         <p class="title-greeting">早安，开启高效的一天 ☀️</p>
         <p class="title-weather" data-weather-line>深圳天气同步中...</p>
-        <h1>All in One</h1>
-        <p class="subtitle">NCIS 团队高频资源导航面板</p>
       </header>
 
       <section class="weather-panel" data-weather-panel>
         <div class="weather-panel-head">
           <div>
             <div class="weather-panel-title">地铁站逐小时天气</div>
-            <p class="weather-panel-hint">默认展示当前与下一小时，悬停/聚焦卡片即可查看过去 3 小时至未来 8 小时。</p>
+            <p class="weather-panel-hint">默认只展示当前与下一小时，鼠标悬停或聚焦卡片即可查看过往 3 小时与未来 11 小时的详细时间线。</p>
           </div>
           <span class="weather-panel-source">数据来源：Open-Meteo</span>
         </div>
@@ -920,7 +976,7 @@
     timezoneOffsetSuffix: '+08:00',
     hourlyParams: 'temperature_2m,relative_humidity_2m,precipitation_probability,weathercode',
     pastHours: 3,
-    futureHours: 8,
+    futureHours: 11,
     condensedOffsets: [0, 1],
     fetchTimeout: 8000
   };
@@ -1488,8 +1544,9 @@
       const slots = offsets.map(offset => {
         const slotEpoch = baseHourEpoch + offset * getHourMs();
         const entry = hourlyMap.get(slotEpoch);
+        const slotClass = offset === 0 ? 'weather-slot current' : 'weather-slot';
         return `
-          <div class="weather-slot">
+          <div class="${slotClass}">
             <div class="weather-slot-time">${formatCondensedTimeLabel(slotEpoch, offset)}</div>
             <div class="weather-slot-summary">${formatSlotSummary(entry)}</div>
             <div class="weather-slot-extra">${formatSlotExtra(entry)}</div>
@@ -1511,8 +1568,15 @@
         .map(offset => {
           const slotEpoch = baseHourEpoch + offset * getHourMs();
           const entry = hourlyMap.get(slotEpoch);
+          const stateClasses = [
+            'weather-timeline-item',
+            offset < 0 ? 'past' : '',
+            offset === 0 ? 'current' : ''
+          ]
+            .filter(Boolean)
+            .join(' ');
           return `
-            <div class="weather-timeline-item ${offset < 0 ? 'past' : ''}">
+            <div class="${stateClasses}">
               <div class="weather-timeline-time">${formatTimelineTimeLabel(slotEpoch, offset)}</div>
               <div class="weather-timeline-temp">${formatTimelineSummary(entry)}</div>
               <div class="weather-slot-extra">${formatTimelineExtra(entry)}</div>
@@ -1575,7 +1639,8 @@
       if (offset === 1) {
         return '下一小时';
       }
-      return formatHourLabel(epoch);
+      const hourLabel = formatHourLabel(epoch);
+      return offset > 0 ? `${hourLabel}（+${offset}h）` : hourLabel;
     }
 
     function formatTimelineTimeLabel(epoch, offset) {
