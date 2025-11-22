@@ -1,22 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All in One - Navigation</title>
+  <title>导航中心</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🐧</text></svg>">
   <style>
-    :root {
-      --bg-color: #101012;
-      --card-color: rgba(22, 22, 25, 0.6);
-      --card-border: rgba(255, 255, 255, 0.1);
-      --hover-color: rgba(35, 35, 40, 0.8);
-      --text-primary: #f0f2f5;
-      --text-secondary: #a0a2a5;
-      --accent-color: #007aff;
-      --shadow-color: rgba(0, 0, 0, 0.2);
-    }
-
     * {
       margin: 0;
       padding: 0;
@@ -24,2012 +13,657 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f14;
+      color: #e5e7eb;
       line-height: 1.6;
-      min-height: 100vh;
-      padding: 2rem;
-      background-image: radial-gradient(circle at 1% 1%, rgba(40, 90, 255, 0.15), transparent 30%),
-      radial-gradient(circle at 99% 99%, rgba(255, 40, 90, 0.15), transparent 40%);
     }
 
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .layout {
-      position: relative;
-    }
-
-    header {
-      margin-bottom: 2.5rem;
-      animation: fadeInDown 0.8s ease-out;
-    }
-
-    h1 {
-      font-weight: 700;
-      font-size: 2.2rem;
-      letter-spacing: -0.5px;
-      margin-bottom: 0.5rem;
-    }
-
-    .subtitle {
-      color: var(--text-secondary);
-      font-size: 1rem;
-    }
-
-    .title-greeting {
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0;
-      color: var(--text-primary);
-      margin-bottom: 0.2rem;
-    }
-
-    .title-weather {
-      font-size: 1rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: var(--accent-color);
-      background: rgba(0, 122, 255, 0.12);
-      border: 1px solid rgba(0, 122, 255, 0.4);
-      padding: 0.35rem 0.85rem;
-      border-radius: 999px;
-      margin-bottom: 0.6rem;
-    }
-
-    .title-weather::before {
-      content: '';
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--accent-color);
-      box-shadow: 0 0 10px rgba(0, 122, 255, 0.6);
-    }
-
-    .weather-panel {
-      margin-bottom: 1.2rem;
-      padding: 1rem;
-      border-radius: 16px;
-      background: rgba(20, 20, 24, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
-    }
-
-    .weather-panel-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.8rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .weather-panel-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .weather-panel-hint {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-    }
-
-    .weather-panel-source {
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-      white-space: nowrap;
-    }
-
-    .weather-card-grid {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-
-    .side-panel .weather-panel {
-      margin-bottom: 0.5rem;
-      padding: 0.9rem;
-      background: rgba(16, 16, 22, 0.85);
-    }
-
-    .side-panel .weather-panel-head {
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .side-panel .weather-panel-title {
-      font-size: 1rem;
-    }
-
-    .side-panel .weather-panel-hint {
-      font-size: 0.8rem;
-    }
-
-    .side-panel .weather-panel-source {
-      font-size: 0.75rem;
-    }
-
-    .side-panel .weather-card-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .side-panel .weather-card {
-      min-height: auto;
-      padding: 0.9rem;
-    }
-
-
-    .weather-card {
-      background: rgba(12, 12, 14, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 1.1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-      min-height: 200px;
-      outline: none;
-    }
-
-    .weather-card:hover,
-    .weather-card:focus-within {
-      border-color: rgba(0, 122, 255, 0.5);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .weather-card:focus-visible {
-      outline: 2px solid var(--accent-color);
-      outline-offset: 3px;
-    }
-
-    .weather-card-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.6rem;
-    }
-
-    .weather-station-title {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .weather-station-subtitle {
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-    }
-
-    .weather-updated {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-    }
-
-
-    .weather-slot {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .weather-slot.current {
-      border-color: rgba(0, 122, 255, 0.75);
-      background: linear-gradient(135deg, rgba(0, 122, 255, 0.35), rgba(138, 43, 226, 0.25));
-      box-shadow: 0 15px 35px rgba(0, 122, 255, 0.35);
-      color: #fff;
-    }
-
-    .weather-slot.current::after {
-      content: '当前';
-      position: absolute;
-      top: 0.4rem;
-      right: 0.45rem;
-      font-size: 0.7rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      background: rgba(0, 0, 0, 0.25);
-      color: #fff;
-      padding: 0.1rem 0.4rem;
-      border-radius: 999px;
-    }
-
-    .weather-slot.current .weather-slot-time,
-    .weather-slot.current .weather-slot-extra {
-      color: rgba(255, 255, 255, 0.85);
-    }
-
-    .weather-slot-time {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-    }
-
-    .weather-slot-summary {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .weather-slot-extra {
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-    }
-
-    .weather-timeline {
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      margin-top: 0.5rem;
-      padding-top: 0.6rem;
-      max-height: none;
-      overflow: visible;
-      opacity: 1;
-    }
-
-    .weather-timeline-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 0.4rem;
-      font-size: 0.85rem;
-    }
-
-    .weather-timeline-item {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 10px;
-      padding: 0.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }
-
-    .weather-timeline-item.past {
-      opacity: 0.8;
-    }
-
-    .weather-timeline-item.current {
-      border-color: rgba(0, 122, 255, 0.6);
-      background: linear-gradient(135deg, rgba(0, 122, 255, 0.3), rgba(138, 43, 226, 0.15));
-      box-shadow: 0 10px 24px rgba(0, 122, 255, 0.25);
-      color: #fff;
-    }
-
-    .weather-timeline-item.current .weather-timeline-time,
-    .weather-timeline-item.current .weather-timeline-temp,
-    .weather-timeline-item.current .weather-slot-extra {
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    .weather-timeline-time {
-      color: var(--text-secondary);
-      font-size: 0.8rem;
-    }
-
-    .weather-timeline-temp {
-      font-weight: 600;
-    }
-
-    .weather-placeholder {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      padding: 0.8rem 0;
-    }
-
-    .main-area {
-      max-width: 100%;
-    }
-
-    .side-panels {
-      position: fixed;
-      top: 1.5rem;
-      right: 0;
-      padding-right: calc(env(safe-area-inset-right, 0px));
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0.75rem;
-      z-index: 30;
-      pointer-events: auto;
-      width: 800px;
-      overflow: visible;
-    }
-
-    .side-panel {
-      position: relative;
-      width: 72px;
-      margin-left: auto;
-      max-height: calc(100vh - 4rem);
-      border-radius: 24px 0 0 24px;
-      background: rgba(15, 15, 20, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-      overflow: hidden;
-      transition: width 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
-      display: flex;
-      flex-direction: column;
+    .header {
+      background: #1a1a24;
+      border-bottom: 1px solid #2a2a38;
+      padding: 1.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
       backdrop-filter: blur(10px);
-      pointer-events: auto;
     }
 
-    .side-panel:hover,
-    .side-panel:focus-within {
-      width: 800px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(18px);
-    }
-
-    .panel-hint {
+    .header-content {
+      max-width: 1600px;
+      margin: 0 auto;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 0.75rem 0;
-      flex-shrink: 0;
-      transition: opacity 0.2s ease, transform 0.2s ease, padding 0.2s ease;
-      color: var(--text-secondary);
-      gap: 0.35rem;
+      justify-content: space-between;
+      gap: 2rem;
     }
 
-
-    .panel-icon {
-      width: 28px;
-      height: 28px;
-      color: var(--text-secondary);
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #4a9eff;
     }
 
-    .side-panel:hover .panel-hint,
-    .side-panel:focus-within .panel-hint {
-      opacity: 0;
-      transform: translateX(20px);
-      height: 0;
-      margin: 0;
-      padding: 0;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .panel-body {
-      opacity: 0;
-      pointer-events: none;
-      padding: 0;
-      overflow: hidden;
-      flex: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-height: 0;
-      transition: opacity 0.25s ease, padding 0.25s ease, max-height 0.25s ease;
-    }
-
-    .side-panel:hover .panel-body,
-    .side-panel:focus-within .panel-body {
-      opacity: 1;
-      pointer-events: auto;
-      padding: 1rem 1.2rem;
+    .search-bar {
       flex: 1;
-      overflow-y: auto;
-      max-height: calc(100vh - 4rem);
-    }
-
-    .hero-card {
-      background: linear-gradient(135deg, rgba(0, 122, 255, 0.2), rgba(138, 43, 226, 0.15));
-      border-radius: 20px;
-      padding: 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .hero-greeting {
-      font-size: 1.6rem;
-      font-weight: 600;
-    }
-
-    .hero-tip {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
-
-    .hero-quick {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center;
-      font-size: 0.9rem;
-    }
-
-    .hero-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    .hero-tag {
-      background: rgba(16, 16, 18, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.2rem 0.7rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      color: var(--text-primary);
-    }
-
-    .info-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .domain-summary {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-
-    .tags-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      background: rgba(20, 20, 24, 0.4);
-      border: 1px dashed var(--card-border);
-      border-radius: 16px;
-      padding: 1rem;
-    }
-
-    .recent-panel {
-      background: rgba(15, 15, 20, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .recent-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-    }
-
-    .recent-clear {
-      background: none;
-      border: none;
-      color: var(--accent-color);
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-
-    .recent-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .recent-item {
-      padding: 0.6rem 0.8rem;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }
-
-    .recent-title {
-      font-size: 0.95rem;
-      color: var(--text-primary);
-    }
-
-    .recent-meta {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-    }
-
-    .recent-empty {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-
-    .tags-label {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-    }
-
-    .tags-scroll {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .tag-chip {
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-      border-radius: 999px;
-      padding: 0.35rem 0.85rem;
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .tag-chip.active {
-      background: rgba(0, 122, 255, 0.15);
-      color: var(--accent-color);
-      border-color: var(--accent-color);
-    }
-
-    .tag-chip:focus-visible {
-      outline: 2px solid var(--accent-color);
-      outline-offset: 2px;
-    }
-
-    .categories {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .category {
-      background: var(--card-color);
-      border-radius: 18px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 8px 32px var(--shadow-color);
-      backdrop-filter: blur(20px);
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      animation: fadeInUp 0.6s ease-out;
-    }
-
-
-    .category:hover {
-      transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .category-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      justify-content: space-between;
-    }
-
-    .category-toggle {
-      background: none;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-secondary);
-      border-radius: 999px;
-      padding: 0.25rem 0.8rem;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-
-    .category-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .links {
-      padding: 0.75rem;
-      overflow-y: auto;
-      overflow-x: hidden;
-      flex-grow: 1;
-    }
-
-    .category.collapsed .links {
-      display: none;
-    }
-
-    .category.collapsed .category-toggle {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-primary);
-    }
-
-    .link-item {
-      display: flex;
-      align-items: center;
-      padding: 1rem 1.25rem;
-      border-radius: 12px;
-      margin-bottom: 0.5rem;
-      cursor: pointer;
-      transition: all 0.25s ease;
+      max-width: 500px;
       position: relative;
     }
 
-
-    .link-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .link-item:hover {
-      background: var(--hover-color);
-      transform: scale(1.03);
-    }
-
-    .category-count {
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #0f0f14;
+      border: 1px solid #2a2a38;
+      border-radius: 8px;
+      color: #e5e7eb;
       font-size: 0.9rem;
-      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #4a9eff;
+      box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .tab {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: #9090a8;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      background: rgba(74, 158, 255, 0.1);
+      color: #4a9eff;
+    }
+
+    .tab.active {
+      background: #4a9eff;
+      color: #fff;
+    }
+
+    .main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      align-items: flex-start;
+    }
+
+    .filter-label {
+      color: #9090a8;
+      font-size: 0.9rem;
+      padding-top: 0.4rem;
+      flex-shrink: 0;
+    }
+
+    #filterChips {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .filter-chip {
+      padding: 0.4rem 0.9rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #2a2a38;
+      border-radius: 20px;
+      color: #9090a8;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-chip:hover {
+      background: rgba(74, 158, 255, 0.1);
+      border-color: #4a9eff;
+      color: #4a9eff;
+    }
+
+    .filter-chip.active {
+      background: #4a9eff;
+      border-color: #4a9eff;
+      color: #fff;
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+
+    .link-card {
+      background: #1a1a24;
+      border: 1px solid #2a2a38;
+      border-radius: 12px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .link-card:hover {
+      border-color: #4a9eff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(74, 158, 255, 0.15);
+    }
+
+    .link-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
     }
 
     .link-icon {
-      margin-right: 1rem;
-      width: 24px;
-      height: 24px;
-      color: var(--text-secondary);
+      width: 20px;
+      height: 20px;
+      color: #4a9eff;
       flex-shrink: 0;
     }
 
-    .link-content {
-      flex-grow: 1;
-      overflow: hidden;
+    .link-info {
+      flex: 1;
+      min-width: 0;
     }
 
     .link-title {
-      font-weight: 500;
       font-size: 1rem;
-      margin-bottom: 0.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--text-primary);
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-bottom: 0.25rem;
+    }
+
+    .link-url {
+      font-size: 0.8rem;
+      color: #9090a8;
+      font-family: 'SF Mono', monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .link-desc {
+      font-size: 0.85rem;
+      color: #9090a8;
+      line-height: 1.5;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.2s, max-height 0.2s;
+    }
+
+    .link-card.show-desc .link-desc {
+      opacity: 1;
+      max-height: 100px;
     }
 
     .link-tags {
       display: flex;
+      gap: 0.4rem;
       flex-wrap: wrap;
-      gap: 0.3rem;
-      margin-top: 0.35rem;
     }
 
     .link-tag {
+      padding: 0.2rem 0.6rem;
+      background: rgba(74, 158, 255, 0.1);
+      border: 1px solid rgba(74, 158, 255, 0.3);
+      border-radius: 4px;
       font-size: 0.75rem;
-      color: var(--accent-color);
-      background: rgba(0, 122, 255, 0.12);
-      padding: 0.2rem 0.5rem;
-      border-radius: 999px;
+      color: #4a9eff;
     }
 
-    .link-url {
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .weather-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
     }
 
-    .link-item:hover .link-url {
-      color: var(--accent-color);
+    .weather-card {
+      background: #1a1a24;
+      border: 1px solid #2a2a38;
+      border-radius: 12px;
+      padding: 1.5rem;
     }
 
-    .tooltip {
-      position: absolute;
-      bottom: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(30, 30, 32, 0.9);
-      backdrop-filter: blur(10px);
-      color: var(--text-primary);
-      padding: 0.6rem 1rem;
+    .weather-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #e5e7eb;
+    }
+
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .weather-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #2a2a38;
       border-radius: 8px;
-      font-size: 0.85rem;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      opacity: 0;
-      transition: all 0.3s ease;
-      pointer-events: none;
-      z-index: 10;
-      white-space: nowrap;
-      border: 1px solid var(--card-border);
+      padding: 0.75rem;
+      text-align: center;
     }
 
-    .link-item:hover .tooltip {
-      opacity: 1;
-      transform: translateX(-50%) translateY(-5px);
+    .weather-item.current {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      border-color: #a855f7;
+    }
+
+    .weather-time {
+      font-size: 0.75rem;
+      color: #9090a8;
+      margin-bottom: 0.25rem;
+    }
+
+    .weather-item.current .weather-time {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .weather-temp {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .weather-item.current .weather-temp {
+      color: #fff;
     }
 
     .empty-state {
       text-align: center;
-      padding: 3rem 1rem;
-      color: var(--text-secondary);
-      border: 1px dashed var(--card-border);
-      border-radius: 18px;
-      background: rgba(20, 20, 24, 0.35);
-    }
-
-    .mini-tip {
-      margin-top: 0;
-      margin-bottom: 0;
-      padding: 0.85rem 1.1rem;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-    }
-
-    .side-panel .mini-tip {
-      margin-top: 0.5rem;
+      padding: 4rem 2rem;
+      color: #9090a8;
     }
 
     .toast {
       position: fixed;
       bottom: 2rem;
-      left: 2rem;
-      background: rgba(16, 16, 20, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-primary);
-      padding: 0.8rem 1.2rem;
-      border-radius: 999px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1a1a24;
+      border: 1px solid #2a2a38;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      color: #e5e7eb;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       opacity: 0;
-      pointer-events: none;
-      transform: translateY(20px);
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      z-index: 50;
+      transition: all 0.3s;
+      z-index: 1000;
     }
 
     .toast.show {
       opacity: 1;
-      transform: translateY(0);
-    }
-
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .main-area {
-        margin-right: 0;
-      }
-
-      .side-panels {
-        position: static;
-        width: 100%;
-        align-items: stretch;
-        gap: 1rem;
-        padding-right: 0;
-        max-height: none;
-        overflow: visible;
-      }
-
-      .side-panel {
-        width: 100%;
-        max-height: none;
-        margin-left: 0;
-      }
-
-    .side-panel,
-    .side-panel:hover,
-    .side-panel:focus-within {
-      width: 100%;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-    }
-
-      .panel-hint {
-        display: none;
-      }
-
-      .panel-body {
-        opacity: 1;
-        pointer-events: auto;
-      }
+      transform: translateX(-50%) translateY(0);
     }
 
     @media (max-width: 768px) {
-      body {
-        padding: 1rem;
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
       }
 
-
-      .tags-scroll {
-        justify-content: flex-start;
+      .search-bar {
+        max-width: 100%;
       }
 
-      .toast {
-        left: 1rem;
-        right: 1rem;
-        text-align: center;
+      .links-grid {
+        grid-template-columns: 1fr;
       }
 
-      h1 {
-        font-size: 1.8rem;
-      }
-
-      .categories {
+      .weather-section {
         grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
-
 <body>
-<div class="layout">
-  <main class="main-area">
-    <div class="container">
-      <header>
-        <p class="title-greeting">早安，开启高效的一天 ☀️</p>
-        <p class="title-weather" data-weather-line>深圳天气同步中...</p>
-      </header>
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">导航中心</div>
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="搜索链接..." id="searchInput">
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-tab="links">链接</button>
+        <button class="tab" data-tab="weather">天气</button>
+      </div>
+    </div>
+  </header>
 
-      <div class="categories"></div>
+  <main class="main">
+    <div id="linksView">
+      <div class="filter-bar">
+        <span class="filter-label">筛选:</span>
+        <div id="filterChips"></div>
+      </div>
+      <div class="links-grid" id="linksGrid"></div>
+    </div>
+
+    <div id="weatherView" style="display: none;">
+      <div class="weather-section" id="weatherSection"></div>
     </div>
   </main>
-  <div class="side-panels">
-    <aside class="side-panel" data-side-panel aria-label="导航助理">
-      <div class="panel-hint">
-        <svg class="panel-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="9"></circle>
-          <path d="M8 16l2-5 5-2-2 5-5 2z"></path>
-        </svg>
-        <span class="sr-only">导航助理</span>
-      </div>
-      <div class="panel-body">
-        <section class="info-panel">
-          <div class="hero-card" data-hero>
-            <div class="hero-greeting" data-greeting>欢迎回来 👋</div>
-            <p class="hero-tip" data-hero-tip>今日暂无提醒，保持好状态继续推进项目吧。</p>
-            <div class="hero-quick">
-              <span>今日热词：</span>
-              <div class="hero-tags" data-hot-tags></div>
-            </div>
-          </div>
 
-          <div class="recent-panel">
-            <div class="recent-header">
-              <span>最近访问</span>
-              <button class="recent-clear" data-clear-history>清除</button>
-            </div>
-            <div class="recent-list" data-recent-list>
-              <div class="recent-empty">还没有访问记录，点击任意链接即可记录。</div>
-            </div>
-          </div>
-          <div class="domain-summary" data-stat="domains">飞书 0 / 内网 0 / 外部 0</div>
-          <div class="tags-panel">
-            <div class="tags-label" data-active-tag>快速标签（点击筛选）</div>
-            <div class="tags-scroll" data-tags-container></div>
-          </div>
-          <div class="mini-tip" data-mini-tip>小提示：合理安排深夜访问，注意 VPN 与网络环境切换。</div>
-        </section>
-      </div>
-    </aside>
+  <div class="toast" id="toast"></div>
 
-    <aside class="side-panel" aria-label="西坑地铁站逐小时天气">
-      <div class="panel-hint">
-        <svg class="panel-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
-        </svg>
-        <span class="sr-only">西坑地铁站逐小时天气</span>
-      </div>
-      <div class="panel-body">
-        <section class="weather-panel" data-weather-panel>
-          <div class="weather-panel-head">
-            <div>
-              <div class="weather-panel-title">西坑地铁站（茜坑）</div>
-              <p class="weather-panel-hint">完整逐小时天气时间线。</p>
-            </div>
-            <span class="weather-panel-source">数据来源：Open-Meteo</span>
-          </div>
-          <div class="weather-card-grid">
-            <article class="weather-card" data-weather-card data-station-card="xikeng" tabindex="0">
-              <div class="weather-card-head">
-                <div>
-                  <div class="weather-station-title">西坑地铁站（茜坑）</div>
-                  <div class="weather-station-subtitle">Xikeng Station</div>
-                </div>
-                <div class="weather-updated" data-station-updated="xikeng">数据同步中...</div>
-              </div>
-              <div class="weather-timeline" data-station-timeline="xikeng">
-                <div class="weather-placeholder">悬停卡片即可展开更长时间线。</div>
-              </div>
-            </article>
-          </div>
-        </section>
-      </div>
-    </aside>
-
-    <aside class="side-panel" aria-label="上梅林地铁站逐小时天气">
-      <div class="panel-hint">
-        <svg class="panel-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-          <path d="M7 7a3 3 0 0 1 0-6"></path>
-        </svg>
-        <span class="sr-only">上梅林地铁站逐小时天气</span>
-      </div>
-      <div class="panel-body">
-        <section class="weather-panel" data-weather-panel>
-          <div class="weather-panel-head">
-            <div>
-              <div class="weather-panel-title">上梅林地铁站</div>
-              <p class="weather-panel-hint">完整逐小时天气时间线。</p>
-            </div>
-            <span class="weather-panel-source">数据来源：Open-Meteo</span>
-          </div>
-          <div class="weather-card-grid">
-            <article class="weather-card" data-weather-card data-station-card="shangmeilin" tabindex="0">
-              <div class="weather-card-head">
-                <div>
-                  <div class="weather-station-title">上梅林地铁站</div>
-                  <div class="weather-station-subtitle">Shangmeilin Station</div>
-                </div>
-                <div class="weather-updated" data-station-updated="shangmeilin">数据同步中...</div>
-              </div>
-              <div class="weather-timeline" data-station-timeline="shangmeilin">
-                <div class="weather-placeholder">悬停卡片即可展开更长时间线。</div>
-              </div>
-            </article>
-          </div>
-        </section>
-      </div>
-    </aside>
-  </div>
-</div>
-
-<div class="toast" data-toast>已打开链接</div>
-
-<script>
-  // ===================================================================================
-  // ===== 未来你只需要维护下面的 navigationData 列表即可 =====
-  // ===================================================================================
-  const RECENT_LINKS_KEY = 'navhub_recent_links';
-  const MAX_RECENT_LINKS = 5;
-  const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast?latitude=22.55&longitude=114.05&current_weather=true&timezone=Asia%2FShanghai';
-  const WEATHER_FETCH_TIMEOUT = 5000;
-  const STATION_WEATHER_CONFIGS = [
-    {
-      id: 'shangmeilin',
-      name: '上梅林地铁站',
-      englishName: 'Shangmeilin Station',
-      latitude: 22.5711039,
-      longitude: 114.0553309
-    },
-    {
-      id: 'xikeng',
-      name: '西坑地铁站（茜坑）',
-      englishName: 'Xikeng Station',
-      latitude: 22.7006976,
-      longitude: 114.0361803
-    }
-  ];
-  const STATION_WEATHER_SETTINGS = {
-    timezone: 'Asia/Shanghai',
-    timezoneOffsetSuffix: '+08:00',
-    hourlyParams: 'temperature_2m,relative_humidity_2m,precipitation_probability,weathercode',
-    pastHours: 3,
-    futureHours: 11,
-    fetchTimeout: 8000
-  };
-
-  const navigationData = [
-    {
-      title: "项目管理",
-      links: [
-        {
-          title: "NCIS 禅道任务总览",
-          url: "http://pm.saiit.com.cn/my/",
-          description: "禅道任务总览及待办面板",
-          tags: ["NCIS", "禅道", "管理"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
-        },
-        {
-          title: "需求规格 2.0",
-          url: "https://fyvnc1t6bo.feishu.cn/wiki/JWOGw4HU5iiqQJktPcbceGOzndg?fromScene=spaceOverview",
-          description: "新版本需求规格说明",
-          tags: ["飞书", "需求", "文档"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
-        },
-        {
-          title: "NCIS 原型",
-          url: "https://modao.cc/proto/FIFBDXrsv9h48aYqq8cpA/sharing?view_mode=device&screen=rbpUn2ZfEb5wxQ4Eo&canvasId=rcUjMnlRUn34N1M9YK5pEU",
-          description: "NCIS 系统产品原型",
-          tags: ["NCIS", "原型", "设计"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`
-        },
-        {
-          title: "NCIS 数模",
-          url: "https://www.pdmaas.cn/design?projectId=1951183560404127746",
-          description: "数据库设计文档",
-          tags: ["NCIS", "数据库", "设计"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`
-        },
-        {
-          title: "重要数据脚本同步到UAT",
-          url: "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=VByGeN",
-          description: "UAT 环境关键数据脚本",
-          tags: ["飞书", "数据库", "UAT"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
-        },
-      ]
-    },
-
-    {
-      title: "开发",
-      links: [
-        {
-          title: "NCIS 开发环境",
-          url: "https://ncis-dev.szgas.com.cn/system/user",
-          description: "NCIS 开发环境在线",
-          tags: ["NCIS", "环境", "内网"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
-        },
-        {
-          title: "NCIS 数据库脚本",
-          url: "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=VByGeN",
-          description: "NCIS 数据库脚本",
-          tags: ["飞书", "数据库", "NCIS"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`
-        },
-        {
-          title: "NCIS 后端开发规范",
-          url: "https://fyvnc1t6bo.feishu.cn/wiki/JwcDwpXwsi03PbkWkFqcby7LnJe",
-          description: "后端开发规范",
-          tags: ["飞书", "规范", "后端"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
-        },
-
-
-
-      ]
-    },
-    {
-      title: "Environment",
-      links: [
-
-        {
-          title: "Jenkins Build Env",
-          url: "http://10.9.31.83:9001/job/sz-newcis-dev/",
-          description: "Dev 分支 Jenkins 构建",
-          tags: ["Jenkins", "CI", "内网"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
-        },
-        {
-          title: "Nacos",
-          url: "http://10.9.18.74:20009/nacos/#/configurationManagement?dataId=&group=&appName=&namespace=ncis_dev&pageSize=&pageNo=&namespaceShowName=ncis_dev",
-          description: "NCIS Nacos在线",
-          tags: ["内网", "配置", "服务"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`
-        },
-        {
-          title: "崖山数据库 — Cloud版",
-          url: "http://10.0.17.94:9328/",
-          description: "YaShan云数据库环境, 线上燕山云数据库",
-          tags: ["数据库", "环境", "内网"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`
-        },
-        {
-          title: "NCIS 权限设计",
-          url: "https://fyvnc1t6bo.feishu.cn/docx/CQXzdKaHRoP030xxRY0cS1ERnac",
-          description: "Newcis 权限和登录设计文档",
-          tags: ["飞书", "设计", "权限"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`
-        },
-
-        {
-          title: "NCIS 飞书项目总览",
-          url: "https://fyvnc1t6bo.feishu.cn/drive/folder/Pn06fVKxslHtHBdL4vgcdMsEnuk",
-          description: "NCIS 飞书项目总览",
-          tags: ["飞书", "文档", "NCIS"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
-        },
-
-        {
-          title: "CCB测试环境",
-          url: "https://demo.tzuat.szgas.com/",
-          description: "建行系统测试环境, 旧系统测试环境",
-          tags: ["外部", "CCB", "环境"],
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>`
-        }
-      ]
-    }
-  ];
-
-  // ===================================================================================
-  // ===== 下面的代码是用来渲染页面的，一般不需要修改 =====
-  // ===================================================================================
-  document.addEventListener('DOMContentLoaded', function () {
-    const categoriesContainer = document.querySelector('.categories');
-    const tagsContainer = document.querySelector('[data-tags-container]');
-    const activeTagLabel = document.querySelector('[data-active-tag]');
-    const domainSummaryEl = document.querySelector('[data-stat="domains"]');
-    const heroGreeting = document.querySelector('[data-greeting]');
-    const heroTip = document.querySelector('[data-hero-tip]');
-    const headerWeatherLine = document.querySelector('[data-weather-line]');
-    const weatherPanels = document.querySelectorAll('[data-weather-panel]');
-    const hotTagsContainer = document.querySelector('[data-hot-tags]');
-    const heroPanel = document.querySelector('[data-hero]');
-    const miniTip = document.querySelector('[data-mini-tip]');
-    const recentList = document.querySelector('[data-recent-list]');
-    const clearHistoryBtn = document.querySelector('[data-clear-history]');
-    const toastEl = document.querySelector('[data-toast]');
-    const stationElementMap = new Map();
-    STATION_WEATHER_CONFIGS.forEach(station => {
-      stationElementMap.set(station.id, {
-        timeline: document.querySelector(`[data-station-timeline="${station.id}"]`),
-        updated: document.querySelector(`[data-station-updated="${station.id}"]`)
-      });
-    });
-
-    let toastTimer = null;
-    let activeTag = 'all';
-    const stats = computeStats(navigationData);
-    const expandedCategories = new Map(
-      navigationData.map(category => [category.title, true])
-    );
-    let recentLinks = loadRecentLinks();
-    let weatherTipRequested = false;
-
-    updateDomainSummary(stats);
-    renderHero(stats);
-    renderMiniTip(stats);
-    updateActiveTagLabel();
-    renderTags(stats.tagCounts, stats.linkCount);
-    renderContent(activeTag);
-    renderRecentLinks(recentLinks);
-    if (weatherPanels.length > 0) {
-      bootstrapStationWeather();
-    }
-
-    categoriesContainer.addEventListener('click', function (event) {
-      const toggleBtn = event.target.closest('[data-toggle-category]');
-      if (toggleBtn) {
-        const categoryTitle = toggleBtn.getAttribute('data-toggle-category');
-        const current = expandedCategories.get(categoryTitle);
-        expandedCategories.set(categoryTitle, !current);
-        renderContent(activeTag);
-        return;
-      }
-
-      const linkItem = event.target.closest('.link-item');
-      if (!linkItem) {
-        return;
-      }
-
-      const url = linkItem.getAttribute('data-url');
-      if (!url) {
-        return;
-      }
-
-      const payload = {
-        title: linkItem.getAttribute('data-title') || '未知链接',
-        url,
-        category: linkItem.getAttribute('data-category') || '',
-        tags: (linkItem.getAttribute('data-tags') || '')
-          .split(',')
-          .map(tag => tag.trim())
-          .filter(Boolean),
-        timestamp: Date.now()
-      };
-
-      window.open(url, '_blank');
-      saveRecentLink(payload);
-      recentLinks = loadRecentLinks();
-      renderRecentLinks(recentLinks);
-      showToast(`已打开「${payload.title}」`);
-    });
-
-    if (tagsContainer) {
-      tagsContainer.addEventListener('click', function (event) {
-        const button = event.target.closest('.tag-chip');
-        if (!button) {
-          return;
-        }
-        const selectedTag = button.getAttribute('data-tag');
-        if (!selectedTag) {
-          return;
-        }
-        activeTag = selectedTag === activeTag ? 'all' : selectedTag;
-        updateActiveTagLabel();
-        renderTags(stats.tagCounts, stats.linkCount);
-        renderContent(activeTag);
-      });
-    }
-
-    if (hotTagsContainer) {
-      hotTagsContainer.addEventListener('click', function (event) {
-        const tagBtn = event.target.closest('[data-quick-tag]');
-        if (!tagBtn) {
-          return;
-        }
-        const tagValue = tagBtn.getAttribute('data-quick-tag');
-        if (!tagValue) {
-          return;
-        }
-        activeTag = tagValue;
-        updateActiveTagLabel();
-        renderTags(stats.tagCounts, stats.linkCount);
-        renderContent(activeTag);
-        showToast(`已切换到「${tagValue}」标签`);
-      });
-    }
-
-    if (clearHistoryBtn) {
-      clearHistoryBtn.addEventListener('click', function () {
-        clearRecentLinks();
-        recentLinks = [];
-        renderRecentLinks(recentLinks);
-        showToast('已清空最近访问');
-      });
-    }
-
-    function renderContent(filterTag = 'all') {
-      if (!categoriesContainer) {
-        return;
-      }
-
-      let html = '';
-      let visibleCategories = 0;
-
-      navigationData.forEach(category => {
-        const matchingLinks = category.links.filter(link => matchesTag(link, filterTag));
-
-        if (!matchingLinks.length) {
-          return;
-        }
-
-        visibleCategories += 1;
-        const isExpanded = expandedCategories.get(category.title) !== false;
-        const linksHTML = matchingLinks.map(link => createLinkHTML(link, category.title)).join('');
-
-        html += `
-          <div class="category ${isExpanded ? '' : 'collapsed'}">
-            <div class="category-header">
-              <h2 class="category-title">${escapeHTML(category.title)}</h2>
-              <div>
-                <span class="category-count">${matchingLinks.length} 条</span>
-                <button class="category-toggle" data-toggle-category="${escapeHTML(category.title)}">${isExpanded ? '收起' : '展开'}</button>
-              </div>
-            </div>
-            <div class="links">
-              ${linksHTML}
-            </div>
-          </div>
-        `;
-      });
-
-      if (visibleCategories === 0) {
-        const keyword = filterTag === 'all' ? '全部' : filterTag;
-        categoriesContainer.innerHTML = `<div class="empty-state">没有找到与“${escapeHTML(keyword)}”相关的链接，换个标签试试？</div>`;
-        return;
-      }
-
-      categoriesContainer.innerHTML = html;
-    }
-
-    function createLinkHTML(link, categoryTitle) {
-      const safeTitle = escapeHTML(link.title);
-      const rawUrl = link.url || '';
-      const safeUrl = escapeHTML(rawUrl);
-      const safeDescription = escapeHTML((link.description || '').trim() || '暂无描述');
-      const tagsMarkup = Array.isArray(link.tags)
-        ? link.tags
-            .filter(Boolean)
-            .map(tag => `<span class="link-tag">${escapeHTML(tag)}</span>`)
-            .join('')
-        : '';
-      const tagsAttr = Array.isArray(link.tags) ? link.tags.join(',') : '';
-
-      return `
-        <div class="link-item" data-url="${safeUrl}" data-title="${safeTitle}" data-category="${escapeHTML(categoryTitle)}" data-tags="${escapeHTML(tagsAttr)}">
-          <div class="link-icon">${link.icon}</div>
-          <div class="link-content">
-            <div class="link-title">${safeTitle}</div>
-            <div class="link-url">${safeUrl}</div>
-            ${tagsMarkup ? `<div class="link-tags">${tagsMarkup}</div>` : ''}
-            <div class="tooltip">${safeDescription}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function updateDomainSummary(currentStats) {
-      if (!domainSummaryEl) {
-        return;
-      }
-      domainSummaryEl.textContent = `飞书 ${currentStats.domainGroups["飞书"]} / 内网 ${currentStats.domainGroups["内网"]} / 外部 ${currentStats.domainGroups["外部"]}`;
-    }
-
-    function renderHero(currentStats) {
-      if (heroGreeting) {
-        heroGreeting.textContent = getGreeting();
-      }
-      if (heroTip) {
-        const fallbackTip = getWorkTip(currentStats);
-        heroTip.textContent = fallbackTip;
-        if (!weatherTipRequested) {
-          weatherTipRequested = true;
-          refreshWeatherTip();
-        }
-      }
-      if (hotTagsContainer) {
-        const entries = Array.from(currentStats.tagCounts.entries()).sort((a, b) => b[1] - a[1]);
-        const hotList = entries.slice(0, 3);
-        hotTagsContainer.innerHTML = hotList.length
-          ? hotList
-              .map(
-                ([tag, count]) =>
-                  `<button class="hero-tag" data-quick-tag="${escapeHTML(tag)}">${escapeHTML(tag)} · ${count}</button>`
-              )
-              .join('')
-          : '<span class="hero-tag">暂无标签</span>';
-      }
-      if (heroPanel) {
-        heroPanel.setAttribute('aria-live', 'polite');
-      }
-    }
-
-    function refreshWeatherTip() {
-      fetchShenzhenWeather()
-        .then(weather => {
-          const formatted = formatWeatherTip(weather);
-          if (formatted) {
-            if (heroTip) {
-              heroTip.textContent = formatted;
-            }
-            if (headerWeatherLine) {
-              headerWeatherLine.textContent = formatted;
-            }
-            return;
+  <script>
+    const navigationData = [
+      {
+        title: "项目管理",
+        links: [
+          {
+            title: "NCIS 禅道任务总览",
+            url: "http://pm.saiit.com.cn/my/",
+            description: "禅道任务总览及待办面板",
+            tags: ["NCIS", "禅道", "管理"]
+          },
+          {
+            title: "需求规格 2.0",
+            url: "https://fyvnc1t6bo.feishu.cn/wiki/JWOGw4HU5iiqQJktPcbceGOzndg?fromScene=spaceOverview",
+            description: "新版本需求规格说明",
+            tags: ["飞书", "需求", "文档"]
+          },
+          {
+            title: "NCIS 原型",
+            url: "https://modao.cc/proto/FIFBDXrsv9h48aYqq8cpA/sharing?view_mode=device&screen=rbpUn2ZfEb5wxQ4Eo&canvasId=rcUjMnlRUn34N1M9YK5pEU",
+            description: "NCIS 系统产品原型",
+            tags: ["NCIS", "原型", "设计"]
+          },
+          {
+            title: "NCIS 数模",
+            url: "https://www.pdmaas.cn/design?projectId=1951183560404127746",
+            description: "数据库设计文档",
+            tags: ["NCIS", "数据库", "设计"]
+          },
+          {
+            title: "重要数据脚本同步到UAT",
+            url: "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=VByGeN",
+            description: "UAT 环境关键数据脚本",
+            tags: ["飞书", "数据库", "UAT"]
           }
-          applyWeatherFallback();
-        })
-        .catch(() => {
-          applyWeatherFallback();
-        });
-    }
-
-    function applyWeatherFallback() {
-      if (headerWeatherLine) {
-        headerWeatherLine.textContent = '天气信息暂不可用';
-      }
-    }
-
-    function renderMiniTip(currentStats) {
-      if (!miniTip) {
-        return;
-      }
-      if (currentStats.domainGroups["飞书"] > currentStats.domainGroups["外部"]) {
-        miniTip.textContent = '飞书文档较多，记得提前登录账号，避免临时跳转受限。';
-      } else {
-        miniTip.textContent = '小提示：合理安排碎片时间，常用链接可以收藏，信息检索更高效。';
-      }
-    }
-
-    function renderTags(tagCounts, totalLinks) {
-      if (!tagsContainer) {
-        return;
-      }
-
-      const entries = Array.from(tagCounts.entries()).sort((a, b) => {
-        if (b[1] === a[1]) {
-          return a[0].localeCompare(b[0], 'zh-Hans');
-        }
-        return b[1] - a[1];
-      });
-
-      let html = createTagChip('all', '全部', totalLinks, activeTag === 'all');
-      entries.forEach(([tag, count]) => {
-        html += createTagChip(tag, tag, count, activeTag === tag);
-      });
-
-      tagsContainer.innerHTML = html;
-    }
-
-    function createTagChip(tagValue, label, count, isActive) {
-      return `<button class="tag-chip ${isActive ? 'active' : ''}" data-tag="${escapeHTML(tagValue)}">${escapeHTML(label)} (${count})</button>`;
-    }
-
-    function renderRecentLinks(list) {
-      if (!recentList) {
-        return;
-      }
-      if (!list.length) {
-        recentList.innerHTML = `<div class="recent-empty">还没有访问记录，点击任意链接即可记录。</div>`;
-        return;
-      }
-
-      recentList.innerHTML = list
-        .map(item => {
-          const timeLabel = formatTimestamp(item.timestamp);
-          const metaPieces = [item.category, item.tags && item.tags.length ? item.tags.join(' / ') : null]
-            .filter(Boolean)
-            .join(' · ');
-          return `
-            <div class="recent-item">
-              <div class="recent-title">${escapeHTML(item.title)}</div>
-              <div class="recent-meta">${escapeHTML(metaPieces || ' ')}</div>
-              <div class="recent-meta">${timeLabel}</div>
-            </div>
-          `;
-        })
-        .join('');
-    }
-
-    function bootstrapStationWeather() {
-      STATION_WEATHER_CONFIGS.forEach(station => {
-        fetchStationWeather(station)
-          .then(hourlyMap => {
-            if (!hourlyMap || !hourlyMap.size) {
-              renderStationError(station.id);
-              return;
-            }
-            renderStationWeather(station, hourlyMap);
-          })
-          .catch(() => {
-            renderStationError(station.id);
-          });
-      });
-    }
-
-    function fetchStationWeather(station) {
-      const url = buildStationWeatherUrl(station);
-      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      let timeoutId = null;
-      if (controller) {
-        timeoutId = setTimeout(() => controller.abort(), STATION_WEATHER_SETTINGS.fetchTimeout);
-      }
-      return fetch(url, {
-        signal: controller ? controller.signal : undefined,
-        cache: 'no-store'
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`接口响应异常：${response.status}`);
+        ]
+      },
+      {
+        title: "开发",
+        links: [
+          {
+            title: "NCIS 开发环境",
+            url: "https://ncis-dev.szgas.com.cn/system/user",
+            description: "NCIS 开发环境在线",
+            tags: ["NCIS", "环境", "内网"]
+          },
+          {
+            title: "NCIS 数据库脚本",
+            url: "https://fyvnc1t6bo.feishu.cn/wiki/C8pTwMfFviw7Nhk9MSVcvCe0noe?sheet=wna8Wk",
+            description: "NCIS 数据库脚本",
+            tags: ["飞书", "数据库", "NCIS"]
+          },
+          {
+            title: "NCIS 后端开发规范",
+            url: "https://fyvnc1t6bo.feishu.cn/wiki/JwcDwpXwsi03PbkWkFqcby7LnJe",
+            description: "后端开发规范",
+            tags: ["飞书", "规范", "后端"]
           }
-          return response.json();
-        })
-        .then(payload => normalizeStationHourly(payload))
-        .finally(() => {
-          if (timeoutId) {
-            clearTimeout(timeoutId);
+        ]
+      },
+      {
+        title: "Environment",
+        links: [
+          {
+            title: "Jenkins Build Env",
+            url: "http://10.9.31.83:9001/job/sz-newcis-dev/",
+            description: "Dev 分支 Jenkins 构建",
+            tags: ["Jenkins", "CI", "内网"]
+          },
+          {
+            title: "Nacos",
+            url: "http://10.9.18.74:20009/nacos/#/configurationManagement?dataId=&group=&appName=&namespace=ncis_dev&pageSize=&pageNo=&namespaceShowName=ncis_dev",
+            description: "NCIS Nacos在线",
+            tags: ["内网", "配置", "服务"]
+          },
+          {
+            title: "崖山数据库 — Cloud版",
+            url: "http://10.0.17.94:9328/",
+            description: "YaShan云数据库环境, 线上崖山云数据库",
+            tags: ["数据库", "环境", "内网"]
+          },
+          {
+            title: "NCIS 权限设计",
+            url: "https://fyvnc1t6bo.feishu.cn/docx/CQXzdKaHRoP030xxRY0cS1ERnac",
+            description: "Newcis 权限和登录设计文档",
+            tags: ["飞书", "设计", "权限"]
+          },
+          {
+            title: "NCIS 飞书项目总览",
+            url: "https://fyvnc1t6bo.feishu.cn/drive/folder/Pn06fVKxslHtHBdL4vgcdMsEnuk",
+            description: "NCIS 飞书项目总览",
+            tags: ["飞书", "文档", "NCIS"]
+          },
+          {
+            title: "CCB测试环境",
+            url: "https://demo.tzuat.szgas.com/",
+            description: "建行系统测试环境, 旧系统测试环境",
+            tags: ["外部", "CCB", "环境"]
           }
-        });
-    }
+        ]
+      }
+    ];
 
-    function buildStationWeatherUrl(station) {
-      const params = new URLSearchParams({
-        latitude: station.latitude,
-        longitude: station.longitude,
-        hourly: STATION_WEATHER_SETTINGS.hourlyParams,
-        past_days: '1',
-        forecast_days: '2',
-        timezone: STATION_WEATHER_SETTINGS.timezone
-      });
-      return `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
-    }
+    const WEATHER_STATIONS = [
+      { id: 'xikeng', name: '西坑地铁站', lat: 22.7006976, lon: 114.0361803 },
+      { id: 'shangmeilin', name: '上梅林地铁站', lat: 22.5711039, lon: 114.0553309 }
+    ];
 
-    function normalizeStationHourly(payload) {
-      const hourly = payload && payload.hourly;
-      if (
-        !hourly ||
-        !Array.isArray(hourly.time) ||
-        !Array.isArray(hourly.temperature_2m) ||
-        !Array.isArray(hourly.weathercode)
-      ) {
-        return null;
-      }
-      const result = new Map();
-      for (let index = 0; index < hourly.time.length; index++) {
-        const timestamp = parseShanghaiTime(hourly.time[index]);
-        if (Number.isNaN(timestamp)) {
-          continue;
-        }
-        result.set(timestamp, {
-          temperature: safeNumber(hourly.temperature_2m, index),
-          humidity: safeNumber(hourly.relative_humidity_2m, index),
-          precipitationProbability: safeNumber(hourly.precipitation_probability, index),
-          weathercode: safeNumber(hourly.weathercode, index)
-        });
-      }
-      return result;
-    }
+    let allLinks = [];
+    let activeFilter = 'all';
+    let activeTab = 'links';
 
-    function renderStationWeather(station, hourlyMap) {
-      const target = stationElementMap.get(station.id);
-      if (!target) {
-        return;
-      }
-      const now = getShanghaiNow();
-      const currentHourEpoch = alignToHour(now);
-      if (target.updated) {
-        target.updated.textContent = `更新：${formatStationUpdatedLabel(now)}`;
-      }
-      if (target.timeline) {
-        target.timeline.innerHTML = buildTimelineSlots(currentHourEpoch, hourlyMap);
-      }
-    }
-
-    function renderStationError(stationId) {
-      const target = stationElementMap.get(stationId);
-      if (!target) {
-        return;
-      }
-      if (target.timeline) {
-        target.timeline.innerHTML = '<div class="weather-placeholder">暂无历史/未来数据。</div>';
-      }
-      if (target.updated) {
-        target.updated.textContent = '更新失败';
-      }
-    }
-
-    function buildTimelineSlots(baseHourEpoch, hourlyMap) {
-      const offsets = [];
-      for (let offset = -STATION_WEATHER_SETTINGS.pastHours; offset <= STATION_WEATHER_SETTINGS.futureHours; offset++) {
-        offsets.push(offset);
-      }
-      if (!offsets.length) {
-        return '<div class="weather-placeholder">暂无时间线。</div>';
-      }
-      const items = offsets
-        .map(offset => {
-          const slotEpoch = baseHourEpoch + offset * getHourMs();
-          const entry = hourlyMap.get(slotEpoch);
-          const stateClasses = [
-            'weather-timeline-item',
-            offset < 0 ? 'past' : '',
-            offset === 0 ? 'current' : ''
-          ]
-            .filter(Boolean)
-            .join(' ');
-          return `
-            <div class="${stateClasses}">
-              <div class="weather-timeline-time">${formatTimelineTimeLabel(slotEpoch, offset)}</div>
-              <div class="weather-timeline-temp">${formatTimelineSummary(entry)}</div>
-              <div class="weather-slot-extra">${formatTimelineExtra(entry)}</div>
-            </div>
-          `;
-        })
-        .join('');
-      return `<div class="weather-timeline-grid">${items}</div>`;
-    }
-
-
-
-    function formatTimelineSummary(entry) {
-      if (!entry) {
-        return '--°C · --';
-      }
-      const desc = describeWeatherCode(entry.weathercode);
-      return `${isValidNumber(entry.temperature) ? `${Math.round(entry.temperature)}°C` : '--°C'} · ${desc}`;
-    }
-
-    function formatTimelineExtra(entry) {
-      if (!entry) {
-        return '湿度/降水 --';
-      }
-      const parts = [];
-      if (isValidNumber(entry.humidity)) {
-        parts.push(`湿度 ${Math.round(entry.humidity)}%`);
-      }
-      if (isValidNumber(entry.precipitationProbability)) {
-        parts.push(`降水 ${Math.round(entry.precipitationProbability)}%`);
-      }
-      return parts.length ? parts.join(' · ') : '无额外数据';
-    }
-
-
-    function formatTimelineTimeLabel(epoch, offset) {
-      const label = formatHourLabel(epoch);
-      if (offset === 0) {
-        return `${label}（当前）`;
-      }
-      return offset > 0 ? `${label}（+${offset}h）` : `${label}（${offset}h）`;
-    }
-
-    function formatHourLabel(epoch) {
-      try {
-        const formatter = new Intl.DateTimeFormat('zh-CN', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-          timeZone: STATION_WEATHER_SETTINGS.timezone
-        });
-        return formatter.format(new Date(epoch));
-      } catch (error) {
-        return '';
-      }
-    }
-
-    function formatStationUpdatedLabel(date) {
-      try {
-        return new Intl.DateTimeFormat('zh-CN', {
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-          timeZone: STATION_WEATHER_SETTINGS.timezone
-        }).format(date);
-      } catch (error) {
-        return '';
-      }
-    }
-
-    function parseShanghaiTime(timeString) {
-      if (!timeString) {
-        return NaN;
-      }
-      const normalized = timeString.length > 16 ? timeString : `${timeString}:00`;
-      return Date.parse(`${normalized}${STATION_WEATHER_SETTINGS.timezoneOffsetSuffix}`);
-    }
-
-    function getShanghaiNow() {
-      const formatter = new Intl.DateTimeFormat('en-CA', {
-        timeZone: STATION_WEATHER_SETTINGS.timezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      });
-      const parts = formatter.formatToParts(new Date());
-      const lookup = {};
-      parts.forEach(part => {
-        if (part.type !== 'literal') {
-          lookup[part.type] = part.value;
-        }
-      });
-      const iso = `${lookup.year}-${lookup.month}-${lookup.day}T${lookup.hour}:${lookup.minute}:${lookup.second}${STATION_WEATHER_SETTINGS.timezoneOffsetSuffix}`;
-      return new Date(iso);
-    }
-
-    function alignToHour(date) {
-      if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
-        return Date.now();
-      }
-      const clone = new Date(date.getTime());
-      clone.setMinutes(0, 0, 0);
-      return clone.getTime();
-    }
-
-    function safeNumber(collection, index) {
-      if (!Array.isArray(collection)) {
-        return NaN;
-      }
-      const raw = collection[index];
-      const parsed = Number(raw);
-      return Number.isFinite(parsed) ? parsed : NaN;
-    }
-
-    function isValidNumber(value) {
-      return typeof value === 'number' && Number.isFinite(value);
-    }
-
-    function getHourMs() {
-      return 60 * 60 * 1000;
-    }
-
-    function matchesTag(link, filterTag) {
-      if (filterTag === 'all') {
-        return true;
-      }
-      if (!Array.isArray(link.tags)) {
-        return false;
-      }
-      return link.tags.includes(filterTag);
-    }
-
-    function computeStats(data) {
-      const snapshot = {
-        categoryCount: data.length,
-        linkCount: 0,
-        descriptionCount: 0,
-        httpsCount: 0,
-        httpCount: 0,
-        domainGroups: {
-          "飞书": 0,
-          "内网": 0,
-          "外部": 0
-        },
-        tagCounts: new Map()
-      };
-
-      data.forEach(category => {
-        category.links.forEach(link => {
-          snapshot.linkCount += 1;
-
-          if (link.description && link.description.trim().length > 0) {
-            snapshot.descriptionCount += 1;
-          }
-
-          if (/^https:\/\//i.test(link.url)) {
-            snapshot.httpsCount += 1;
-          } else if (/^http:\/\//i.test(link.url)) {
-            snapshot.httpCount += 1;
-          }
-
-          const domain = extractDomain(link.url);
-          const domainGroup = classifyDomain(domain);
-          snapshot.domainGroups[domainGroup] += 1;
-
-          const linkTags = Array.isArray(link.tags) ? link.tags : [];
-          linkTags.forEach(tag => {
-            const trimmedTag = tag.trim();
-            if (!trimmedTag) {
-              return;
-            }
-            snapshot.tagCounts.set(
-              trimmedTag,
-              (snapshot.tagCounts.get(trimmedTag) || 0) + 1
-            );
-          });
-        });
-      });
-
-      return snapshot;
-    }
-
-    function extractDomain(url) {
-      try {
-        return new URL(url).hostname.toLowerCase();
-      } catch (error) {
-        return '';
-      }
-    }
-
-    function classifyDomain(hostname) {
-      if (!hostname) {
-        return "外部";
-      }
-      if (hostname.includes('feishu.cn')) {
-        return "飞书";
-      }
-      if (
-        hostname.includes('szgas.com') ||
-        hostname.includes('ncis') ||
-        hostname.startsWith('10.') ||
-        hostname.startsWith('192.168.') ||
-        /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname)
-      ) {
-        return "内网";
-      }
-      return "外部";
-    }
-
-    function escapeHTML(value = '') {
-      return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function updateActiveTagLabel() {
-      if (!activeTagLabel) {
-        return;
-      }
-      activeTagLabel.textContent =
-        activeTag === 'all'
-          ? "快速标签（点击筛选）"
-          : `快速标签 · 当前：${activeTag}`;
-    }
-
-    function getGreeting() {
-      const hour = new Date().getHours();
-      if (hour < 6) return '夜深了，注意休息 🌙';
-      if (hour < 12) return '早安，开启高效的一天 ☀️';
-      if (hour < 18) return '下午好，保持稳健节奏 ☕';
-      return '晚上好，别忘了及时复盘 🌆';
-    }
-
-    function getWorkTip(currentStats) {
-      if (currentStats.linkCount > 20) {
-        return `当前共有 ${currentStats.linkCount} 个链接，合理使用标签能更快定位。`;
-      }
-      return '若需要补充说明，可在链接对象中添加 description 字段让团队更快理解。';
-    }
-
-    function fetchShenzhenWeather() {
-      if (typeof fetch !== 'function') {
-        return Promise.resolve(null);
-      }
-      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      const timeoutId = setTimeout(() => {
-        if (controller) {
-          controller.abort();
-        }
-      }, WEATHER_FETCH_TIMEOUT);
-
-      return fetch(WEATHER_API_URL, {
-        signal: controller ? controller.signal : undefined,
-        cache: 'no-store'
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`接口响应异常：${response.status}`);
-          }
-          return response.json();
-        })
-        .then(payload => {
-          return payload && payload.current_weather ? payload.current_weather : null;
-        })
-        .catch(error => {
-          console.warn('天气接口调用失败', error);
-          return null;
-        })
-        .finally(() => {
-          clearTimeout(timeoutId);
-        });
-    }
-
-    function describeWeatherCode(code) {
-      const value = Number(code);
-      if (Number.isNaN(value)) {
-        return '多云';
-      }
-      if (value === 0) {
-        return '晴朗';
-      }
-      if ([1, 2, 3].includes(value)) {
-        return '多云';
-      }
-      if ([45, 48].includes(value)) {
-        return '有雾';
-      }
-      if ([51, 53, 55, 56, 57].includes(value)) {
-        return '细雨';
-      }
-      if ([61, 63, 65, 66, 67].includes(value)) {
-        return '小到中雨';
-      }
-      if ([71, 73, 75, 77, 85, 86].includes(value)) {
-        return '降雪';
-      }
-      if ([80, 81, 82].includes(value)) {
-        return '阵雨';
-      }
-      if ([95, 96, 99].includes(value)) {
-        return '雷暴';
-      }
-      return '多云';
-    }
-
-    function formatWeatherTip(weather) {
-      if (
-        !weather ||
-        typeof weather.temperature !== 'number' ||
-        Number.isNaN(weather.temperature)
-      ) {
-        return '';
-      }
-      const parts = [
-        `深圳当前${describeWeatherCode(weather.weathercode)}`,
-        `气温 ${Math.round(weather.temperature)}°C`
-      ];
-      if (typeof weather.windspeed === 'number' && !Number.isNaN(weather.windspeed)) {
-        parts.push(`风速 ${Math.round(weather.windspeed)} km/h`);
-      }
-      return `${parts.join('，')}，合理安排通勤与现场支持。`;
-    }
-
-    function runWeatherFormatterSelfCheck() {
-      const probe = { temperature: 27.4, windspeed: 6.2, weathercode: 80 };
-      const formatted = formatWeatherTip(probe);
-      console.assert(
-        typeof formatted === 'string' &&
-          formatted.includes('深圳当前') &&
-          formatted.includes('气温') &&
-          formatted.includes('风速'),
-        '天气提示格式化逻辑异常',
-        formatted
+    // 初始化
+    function init() {
+      allLinks = navigationData.flatMap(cat =>
+        cat.links.map(link => ({ ...link, category: cat.title }))
       );
+
+      renderFilters();
+      renderLinks();
+      setupEventListeners();
+      loadWeather();
     }
 
-    runWeatherFormatterSelfCheck();
+    // 渲染筛选器
+    function renderFilters() {
+      const tags = new Map();
+      allLinks.forEach(link => {
+        link.tags?.forEach(tag => {
+          tags.set(tag, (tags.get(tag) || 0) + 1);
+        });
+      });
 
-    function formatTimestamp(timestamp) {
-      if (!timestamp) {
-        return '';
-      }
-      const date = new Date(Number(timestamp));
-      if (Number.isNaN(date.getTime())) {
-        return '';
-      }
-      const month = `${date.getMonth() + 1}`.padStart(2, '0');
-      const day = `${date.getDate()}`.padStart(2, '0');
-      const hour = `${date.getHours()}`.padStart(2, '0');
-      const minute = `${date.getMinutes()}`.padStart(2, '0');
-      return `${month}/${day} ${hour}:${minute}`;
+      const filterChips = document.getElementById('filterChips');
+      let html = `<div class="filter-chip ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">全部 (${allLinks.length})</div>`;
+
+      Array.from(tags.entries())
+        .filter(([_, count]) => count >= 3)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([tag, count]) => {
+          html += `<div class="filter-chip ${activeFilter === tag ? 'active' : ''}" data-filter="${tag}">${tag} (${count})</div>`;
+        });
+
+      filterChips.innerHTML = html;
     }
 
-    function loadRecentLinks() {
-      try {
-        const raw = localStorage.getItem(RECENT_LINKS_KEY);
-        if (!raw) {
-          return [];
-        }
-        const parsed = JSON.parse(raw);
-        if (!Array.isArray(parsed)) {
-          return [];
-        }
-        return parsed.slice(0, MAX_RECENT_LINKS);
-      } catch (error) {
-        console.warn('无法读取最近访问记录', error);
-        return [];
-      }
-    }
+    // 渲染链接
+    function renderLinks(searchTerm = '') {
+      const grid = document.getElementById('linksGrid');
+      let filtered = allLinks;
 
-    function saveRecentLink(link) {
-      try {
-        const existing = loadRecentLinks().filter(item => item.url !== link.url);
-        existing.unshift(link);
-        const trimmed = existing.slice(0, MAX_RECENT_LINKS);
-        localStorage.setItem(RECENT_LINKS_KEY, JSON.stringify(trimmed));
-      } catch (error) {
-        console.warn('无法写入最近访问记录', error);
+      if (activeFilter !== 'all') {
+        filtered = filtered.filter(link => link.tags?.includes(activeFilter));
       }
-    }
 
-    function clearRecentLinks() {
-      try {
-        localStorage.removeItem(RECENT_LINKS_KEY);
-      } catch (error) {
-        console.warn('无法清除最近访问记录', error);
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        filtered = filtered.filter(link =>
+          link.title.toLowerCase().includes(term) ||
+          link.description?.toLowerCase().includes(term) ||
+          link.url.toLowerCase().includes(term)
+        );
       }
-    }
 
-    function showToast(message) {
-      if (!toastEl) {
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="empty-state">没有找到匹配的链接</div>';
         return;
       }
-      toastEl.textContent = message;
-      toastEl.classList.add('show');
-      if (toastTimer) {
-        clearTimeout(toastTimer);
-      }
-      toastTimer = setTimeout(() => {
-        toastEl.classList.remove('show');
-      }, 2400);
-    }
-  });
-</script>
-</body>
 
+      grid.innerHTML = filtered.map(link => `
+        <div class="link-card" data-url="${link.url}">
+          <div class="link-header">
+            <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+            <div class="link-info">
+              <div class="link-title">${link.title}</div>
+              <div class="link-url">${link.url}</div>
+            </div>
+          </div>
+          ${link.description ? `<div class="link-desc">${link.description}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    // 加载天气
+    async function loadWeather() {
+      const section = document.getElementById('weatherSection');
+
+      for (const station of WEATHER_STATIONS) {
+        try {
+          const url = `https://api.open-meteo.com/v1/forecast?latitude=${station.lat}&longitude=${station.lon}&hourly=temperature_2m&past_hours=3&forecast_hours=12&timezone=Asia/Shanghai`;
+          const res = await fetch(url);
+          const data = await res.json();
+
+          const now = new Date();
+          const currentHour = now.getHours();
+
+          let html = `
+            <div class="weather-card">
+              <div class="weather-title">${station.name}</div>
+              <div class="weather-grid">
+          `;
+
+          const temps = data.hourly.temperature_2m;
+          for (let i = 0; i < temps.length; i++) {
+            const temp = temps[i];
+            const time = new Date(data.hourly.time[i]);
+            const hour = time.getHours();
+            const isCurrent = i === 3;
+
+            html += `
+              <div class="weather-item ${isCurrent ? 'current' : ''}">
+                <div class="weather-time">${hour}:00${isCurrent ? ' 当前' : ''}</div>
+                <div class="weather-temp">${Math.round(temp)}°C</div>
+              </div>
+            `;
+          }
+
+          html += '</div></div>';
+          section.innerHTML += html;
+        } catch (e) {
+          console.error('Weather fetch failed:', e);
+        }
+      }
+    }
+
+    // 事件监听
+    function setupEventListeners() {
+      // Tab切换
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          activeTab = tab.dataset.tab;
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          document.getElementById('linksView').style.display = activeTab === 'links' ? 'block' : 'none';
+          document.getElementById('weatherView').style.display = activeTab === 'weather' ? 'block' : 'none';
+        });
+      });
+
+      // 筛选
+      document.getElementById('filterChips').addEventListener('click', (e) => {
+        const chip = e.target.closest('.filter-chip');
+        if (chip) {
+          activeFilter = chip.dataset.filter;
+          renderFilters();
+          renderLinks(document.getElementById('searchInput').value);
+        }
+      });
+
+      // 搜索
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        renderLinks(e.target.value);
+      });
+
+      // 链接点击
+      document.getElementById('linksGrid').addEventListener('click', (e) => {
+        const card = e.target.closest('.link-card');
+        if (card) {
+          const url = card.dataset.url;
+          window.open(url, '_blank');
+          showToast('已打开链接');
+        }
+      });
+
+      // 鼠标悬停显示描述
+      let hoverTimer = null;
+      document.getElementById('linksGrid').addEventListener('mouseover', (e) => {
+        const card = e.target.closest('.link-card');
+        if (card) {
+          hoverTimer = setTimeout(() => {
+            card.classList.add('show-desc');
+          }, 300);
+        }
+      });
+
+      document.getElementById('linksGrid').addEventListener('mouseout', (e) => {
+        const card = e.target.closest('.link-card');
+        if (card) {
+          clearTimeout(hoverTimer);
+          card.classList.remove('show-desc');
+        }
+      });
+    }
+
+    // Toast提示
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    init();
+  </script>
+</body>
 </html>
